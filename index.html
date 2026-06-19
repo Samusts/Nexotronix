@@ -1787,7 +1787,15 @@ body { overflow-x: hidden; }
 <section id="products">
   <div class="container" style="padding-top:64px;padding-bottom:80px;">
     <div class="products-header" style="margin-bottom:12px;">
-      <div class="filter-row">
+      <div class="section-eyebrow" style="padding:0 0 6px;">Browse Products</div>
+      <div class="filter-row search-pills-row">
+        <button class="pill active" data-cat="all" onclick="setFilter('all', this)">All</button>
+        <button class="pill" data-cat="phone" onclick="setFilter('phone', this)">📱 Phones</button>
+        <button class="pill" data-cat="laptop" onclick="setFilter('laptop', this)">💻 Laptops</button>
+        <button class="pill" data-cat="accessory" onclick="setFilter('accessory', this)">🎧 Accessories</button>
+        <button class="pill" data-cond="new" onclick="setCondFilter('new', this)">🟢 New</button>
+        <button class="pill" data-cond="used" onclick="setCondFilter('used', this)">🟡 UK Used</button>
+      </div>
     </div>
     <div id="product-grid"></div>
   </div>
@@ -1800,7 +1808,6 @@ body { overflow-x: hidden; }
     <button class="pill active" data-cat="all" onclick="setFilter('all', this)">All</button>
     <button class="pill" data-cat="phone" onclick="setFilter('phone', this)">📱 Phones</button>
     <button class="pill" data-cat="laptop" onclick="setFilter('laptop', this)">💻 Laptops</button>
-    <button class="pill" data-cat="gaming" onclick="setFilter('gaming', this)">🎮 Gaming</button>
     <button class="pill" data-cat="accessory" onclick="setFilter('accessory', this)">🎧 Accessories</button>
     <button class="pill" data-cond="new" onclick="setCondFilter('new', this)">🟢 New</button>
     <button class="pill" data-cond="used" onclick="setCondFilter('used', this)">🟡 UK Used</button>
