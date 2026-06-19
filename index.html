@@ -3204,10 +3204,14 @@ function toggleMenu() {
 }
 
 function focusSearch() {
-  document.getElementById('search-input').focus();
-  document.getElementById('search-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const box = document.getElementById('search-inner-collapsible');
+  const isOpen = box.style.display !== 'none';
+  box.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    document.getElementById('search-input').focus();
+    updateHeaderSpacer();
+  }
 }
-
 // Close modals on backdrop click
 document.getElementById('cart-modal').addEventListener('click', function(e) {
   if (e.target === this) closeCart();
