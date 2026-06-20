@@ -3089,7 +3089,12 @@ function renderOtpPuzzle(otp) {
    ADMIN AUTH — PASSWORD + OTP
    ============================================================ */
 // ⚠️ Change these credentials in the source code:
-const ADMIN_PASSWORD = 'nexotronix2025';
+const ADMIN_PASSWORD_HASH = '56ca83f081a22c62f8f094f2658b4edebb685554fd8ce882e2fc117c3970af3d'; // sha256("nexotronix2025")
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
 let currentOTP = null;
 let otpExpiry = null;
 
@@ -3116,7 +3121,7 @@ async function checkPassword() {
   }
   const pw = document.getElementById('auth-password').value;
   const errEl = document.getElementById('auth-pw-error');
-  if (pw !== ADMIN_PASSWORD) {
+  if ((await sha256(pw)) !== ADMIN_PASSWORD_HASH) {
     SEC.fail();
     const left = SEC.maxAttempts - SEC.getA().n;
     errEl.textContent = left<=0 ? '🔒 Account locked 15 min.' : 'Wrong password. '+left+(left===1?' attempt left':' attempts left')+'.';
