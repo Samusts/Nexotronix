@@ -465,6 +465,14 @@ async function checkLogin() {
   const p = document.getElementById('login-pass').value;
   const c = getCreds();
   const errEl = document.getElementById('login-error');
+
+  /* Auto-migrate old plain-text creds (saved before hashing was added) */
+  if (c.username && !c.passwordHash && c.password) {
+    c.passwordHash = await sha256(c.password);
+    delete c.password;
+    DB.sO('creds', c);
+  }
+
   const pHash = await sha256(p);
   if (u === c.username && pHash === c.passwordHash) {
     errEl.textContent = '';
