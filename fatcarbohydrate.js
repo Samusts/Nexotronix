@@ -1,8 +1,81 @@
+/* ==============================================================
+   CLOUDFLARE KV — ONLINE SHARED ERP DATABASE
+   ============================================================== */
+const WORKER_URL = 'https://nexotronix-proxy.samuelphilip002.workers.dev';
+const ERP_KV_SECRET = 'CHANGE-THIS-TO-YOUR-OWN-SECRET-PHRASE';
+const KV_KEYS = ['invoices','quotations','receipts','estimates','customers','projects','expenses','audit','settings','creds'];
+
+async function kvGet(key) {
+  try {
+    const res = await fetch(WORKER_URL + '/kv/' + key, {
+      headers: { 'X-Nexotronix-Auth': ERP_KV_SECRET }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.value;
+  } catch (e) { return null; }
+}
+
+async function kvSet(key, value) {
+  try {
+    await fetch(WORKER_URL + '/kv/' + key, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Nexotronix-Auth': ERP_KV_SECRET },
+      body: JSON.stringify({ value })
+    });
+    return true;
+  } catch (e) { return false; }
+}
+
+let _kvSyncStatus = 'idle'; // idle | syncing | online | offline
+
+async function syncFromKV() {
+  _kvSyncStatus = 'syncing';
+  updateSyncBadge();
+  let anyOnline = false;
+  for (const key of KV_KEYS) {
+    const val = await kvGet(key);
+    if (val !== null) {
+      localStorage.setItem('nx_erp_' + key, JSON.stringify(val));
+      anyOnline = true;
+    }
+  }
+  _kvSyncStatus = anyOnline ? 'online' : 'offline';
+  updateSyncBadge();
+  return anyOnline;
+}
+
+function updateSyncBadge() {
+  const el = document.getElementById('kv-sync-badge');
+  if (!el) return;
+  const map = {
+    idle: ['⚪', 'Not synced'],
+    syncing: ['🔄', 'Syncing...'],
+    online: ['🟢', 'Online — synced'],
+    offline: ['🔴', 'Offline — local only']
+  };
+  const [icon, label] = map[_kvSyncStatus];
+  el.textContent = icon + ' ' + label;
+}
+
+function manualSync() {
+  syncFromKV().then(ok => {
+    toast(ok ? '🟢 Synced with online database' : '🔴 Could not reach online database — using local data');
+    rDash();
+  });
+}
+
 const DB={
   g:k=>JSON.parse(localStorage.getItem('nx_erp_'+k)||'[]'),
-  s:(k,v)=>localStorage.setItem('nx_erp_'+k,JSON.stringify(v)),
+  s:(k,v)=>{
+    localStorage.setItem('nx_erp_'+k,JSON.stringify(v));
+    if (KV_KEYS.includes(k)) kvSet(k, v);
+  },
   gO:k=>JSON.parse(localStorage.getItem('nx_erp_'+k)||'{}'),
-  sO:(k,v)=>localStorage.setItem('nx_erp_'+k,JSON.stringify(v))
+  sO:(k,v)=>{
+    localStorage.setItem('nx_erp_'+k,JSON.stringify(v));
+    if (KV_KEYS.includes(k)) kvSet(k, v);
+  }
 };
 let S=DB.gO('settings');
 if(!S.name){S={name:'Nexotronix',phone:'+234 903 600 6553',address:'Maiduguri, Borno State, Nigeria',email:'',wa:'2349036006553',currency:'N',tax:7.5,terms:'Payment due within 7 days. All sales are final.'};DB.sO('settings',S);}
@@ -486,13 +559,24 @@ function grantERPAccess(u) {
   sessionStorage.setItem('nx_erp_authed', '1');
   document.getElementById('login-gate').style.display = 'none';
   aud('Login', 'User logged in: ' + u);
+  syncFromKV().then(function(ok){
+    rDash(); uCL();
+    toast(ok ? '🟢 Synced with online database' : '🔴 Running on local data — online database unreachable');
+  });
 }
 
-function checkErpAuth() {
+async function checkErpAuth() {
   if (sessionStorage.getItem('nx_erp_authed') === '1') {
     document.getElementById('login-gate').style.display = 'none';
   } else {
     document.getElementById('login-gate').style.display = 'flex';
+    /* Pull the latest credentials from the online store BEFORE
+       the user attempts to log in, so a password changed on another
+       device is recognized here too. */
+    const remoteCreds = await kvGet('creds');
+    if (remoteCreds && remoteCreds.passwordHash) {
+      localStorage.setItem('nx_erp_creds', JSON.stringify(remoteCreds));
+    }
   }
 }
 

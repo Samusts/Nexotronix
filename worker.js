@@ -74,14 +74,42 @@ export default {
     const path = url.pathname;
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
 
+    // ── ERP KV STORE (Cloudflare KV — shared online ERP data) ──
+    if (path.startsWith('/kv/')) {
+      const key = path.slice(4);
+      const ALLOWED_KEYS = ['invoices','quotations','receipts','estimates','customers','projects','expenses','audit','settings','creds'];
+      if (!ALLOWED_KEYS.includes(key)) return errRes('Unknown key', 404);
+
+      const authHeader = request.headers.get('X-Nexotronix-Auth') || '';
+      if (!env.ERP_KV_SECRET || authHeader !== env.ERP_KV_SECRET) {
+        return errRes('Unauthorized', 401);
+      }
+      if (!env.NEXOTRONIX_KV) return errRes('KV not bound on this Worker', 500);
+
+      if (request.method === 'GET') {
+        const val = await env.NEXOTRONIX_KV.get('erp_' + key);
+        return jsonRes({ key, value: val ? JSON.parse(val) : null });
+      }
+      if (request.method === 'POST' || request.method === 'PUT') {
+        if (!checkRate(ip, 'kvwrite', 60)) return errRes('Rate limit exceeded', 429);
+        let body;
+        try { body = await request.json(); } catch { return errRes('Invalid JSON'); }
+        await env.NEXOTRONIX_KV.put('erp_' + key, JSON.stringify(body.value));
+        return jsonRes({ ok: true, key });
+      }
+      return errRes('Method not allowed', 405);
+    }
+
     // ── Health check ─────────────────────────────────────────
     if (path === '/health') {
       return jsonRes({
         status: 'ok',
-        worker: 'Nexotronix v4.2',
+        worker: 'Nexotronix v4.3',
         ai: !!env.ANTHROPIC_KEY,
         db: !!env.GITHUB_TOKEN,
         push: !!env.VAPID_PRIVATE_KEY,
+        erpKv: !!env.NEXOTRONIX_KV,
+        erpKvSecret: !!env.ERP_KV_SECRET,
         time: new Date().toISOString()
       });
     }
