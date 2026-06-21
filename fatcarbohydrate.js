@@ -525,11 +525,26 @@ async function sha256(text) {
 
 function getCreds() {
   const c = DB.gO('creds');
-  if (!c.username) {
-    const def = { username: 'admin', passwordHash: 'd00b1e88cc18920714310a19671fe8f3dc6ac129277022bf9ed4a3345c32363' };
-    DB.sO('creds', def);
-    return def;
+  const def = { username: 'admin', passwordHash: 'd00b1e88cc18920714310a19671fe8f3dc6ac129277022bf9ed4a3345c323636' };
+
+  /* Case 1: nothing saved yet — use the default */
+  if (!c.username) { DB.sO('creds', def); return def; }
+
+  /* Case 2: a passwordHash exists but is corrupted/truncated
+     (caused by a previous buggy version) — reset to default */
+  if (c.passwordHash && !/^[a-f0-9]{64}$/i.test(c.passwordHash)) {
+    DB.sO('creds', def); return def;
   }
+
+  /* Case 3: old plain-text format (has .password, no .passwordHash) —
+     leave it as-is. checkLogin() migrates this on the next attempt,
+     preserving whatever custom password was actually set. */
+  if (!c.passwordHash && c.password) return c;
+
+  /* Case 4: completely empty/broken record — use the default */
+  if (!c.passwordHash && !c.password) { DB.sO('creds', def); return def; }
+
+  /* Case 5: normal — valid hash already present */
   return c;
 }
 
