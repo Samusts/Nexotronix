@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Nexotronix ERP — Business Suite</title>
+<link rel="icon" href="logo-dark.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--gold:#C9A84C;--gold2:#f0c050;--bg:#0a0a0a;--bg2:#111;--surface:#1a1a1a;--surface2:#222;--border:rgba(255,255,255,0.08);--bG:rgba(201,168,76,0.25);--text:#f5f5f5;--muted:#888;--dim:#444;--green:#38a169;--red:#e53e3e;--blue:#3182ce;--orange:#dd6b20;--wa:#25D366;--r:12px;--font:system-ui,sans-serif}
+[data-theme="light"]{--bg:#f0f0f0;--bg2:#e8e8e8;--surface:#fff;--surface2:#f8f8f8;--border:rgba(0,0,0,0.1);--text:#111;--muted:#555;--dim:#bbb}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+.tb{display:flex;align-items:center;gap:10px;padding:0 14px;height:50px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;z-index:50}
+.tlogo{height:30px;object-fit:contain}
+.tbrand{font-size:13px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tsub{font-size:9px;color:var(--muted)}
+.tr{margin-left:auto;display:flex;align-items:center;gap:6px}
+.tbtn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:7px;font-size:11px;cursor:pointer;transition:all 0.15s}
+.tbtn:hover{border-color:var(--gold);color:var(--gold)}
+.wrap{display:flex;flex:1;overflow:hidden}
+.sb{width:188px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:none}
+.sb::-webkit-scrollbar{display:none}
+.mn{flex:1;overflow-y:auto;padding:16px;background:var(--bg)}
+.ns{padding:8px 14px 2px;font-size:9px;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 14px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent}
+.ni:hover{color:var(--text);background:var(--surface2)}
+.ni.active{color:var(--gold);background:rgba(201,168,76,0.07);border-left-color:var(--gold);font-weight:600}
+.ni-ic{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.panel{display:none}.panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px;margin-bottom:16px}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c,var(--gold))}
+.sv{font-size:20px;font-weight:900;color:var(--c,var(--gold));font-family:monospace}
+.sl{font-size:9.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.si{position:absolute;top:12px;right:12px;font-size:18px;opacity:0.22}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:7px}
+.stitle{font-size:15px;font-weight:800}
+.sa{display:flex;gap:6px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;transition:all 0.15s;border:none;white-space:nowrap}
+.bg{background:var(--gold);color:#0a0a0a}.bg:hover{background:var(--gold2)}
+.bo{background:transparent;border:1px solid var(--border);color:var(--muted)}.bo:hover{border-color:var(--gold);color:var(--gold)}
+.bgn{background:var(--green);color:#fff}
+.br{background:rgba(229,62,62,0.1);border:1px solid rgba(229,62,62,0.3);color:var(--red)}
+.bb{background:rgba(49,130,206,0.1);border:1px solid rgba(49,130,206,0.3);color:var(--blue)}
+.bw{background:var(--wa);color:#fff}
+.sm{padding:4px 9px;font-size:10.5px}
+.tw{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{background:var(--surface2);padding:9px 11px;text-align:left;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+td{padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.012)}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:700}
+.bp{background:rgba(56,161,105,0.15);color:var(--green)}
+.bu{background:rgba(229,62,62,0.12);color:var(--red)}
+.bpa{background:rgba(221,107,32,0.12);color:var(--orange)}
+.bov{background:rgba(229,62,62,0.2);color:#fc8181}
+.bdr{background:var(--surface2);color:var(--muted)}
+.bst{background:rgba(49,130,206,0.12);color:var(--blue)}
+.bca{background:var(--surface2);color:var(--dim)}
+.bpr{background:rgba(201,168,76,0.12);color:var(--gold)}
+.bco{background:rgba(56,161,105,0.15);color:var(--green)}
+.fc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fr{display:flex;flex-direction:column;gap:4px}
+.fl{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px}
+.fi,.fs,.ft{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;color:var(--text);font-size:12.5px;font-family:var(--font);outline:none;transition:border-color 0.15s}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1)}
+.ft{resize:vertical;min-height:56px}
+.fs{appearance:none;cursor:pointer}
+.ff{grid-column:1/-1}
+.it table{width:100%;border-collapse:collapse;margin:8px 0;font-size:11.5px}
+.it th{background:var(--surface2);padding:7px 9px;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border)}
+.it td{padding:6px 9px;border-bottom:1px solid var(--border)}
+.it td input,.it td select{background:transparent;border:none;color:var(--text);font-size:11.5px;width:100%;outline:none;font-family:var(--font)}
+.it td input:focus,.it td select:focus{background:var(--surface2);border-radius:4px;padding:1px 3px}
+.rt{color:var(--gold);font-size:10.5px;font-weight:700}
+.db{background:none;border:none;color:var(--dim);font-size:14px;cursor:pointer;padding:1px 5px}
+.db:hover{color:var(--red)}
+.tbox{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px;max-width:280px;margin-left:auto;margin-top:10px}
+.tr2{display:flex;justify-content:space-between;padding:5px 0;font-size:11px;border-bottom:1px solid var(--border)}
+.tr2:last-child{border-bottom:none;font-weight:900;font-size:13.5px;color:var(--gold)}
+.tr2.gd{padding-top:8px;border-top:2px solid var(--bG)}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:200;align-items:center;justify-content:center;padding:12px}
+#otp-gate{z-index:9500 !important;}
+.ov.open{display:flex}
+.mb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:13px 17px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.mt{font-size:13.5px;font-weight:800}
+.mc{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:2px}
+.mbd{padding:17px}
+.sr{display:flex;gap:8px;margin-bottom:13px;flex-wrap:wrap}
+.es{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-size:11.5px;outline:none;flex:1;min-width:150px;font-family:var(--font)}
+.es:focus{border-color:var(--gold)}
+.empty{text-align:center;padding:28px 16px;color:var(--dim)}
+.bw2{display:flex;align-items:flex-end;gap:5px;height:88px;margin-top:8px}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bf{width:100%;background:linear-gradient(180deg,var(--gold),rgba(201,168,76,0.35));border-radius:2px 2px 0 0;min-height:2px;transition:height 0.4s ease}
+.bl{font-size:8px;color:var(--muted)}
+/* Doc preview */
+.dp{background:#fff;color:#111;padding:26px;font-family:Arial,sans-serif;font-size:11.5px;line-height:1.6;border-radius:var(--r)}
+.dh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;padding-bottom:13px;border-bottom:2px solid #C9A84C}
+.dlogo{height:42px;object-fit:contain}
+.dco{text-align:right}.dco h3{font-size:13px;color:#111;margin:0 0 2px}.dco p{font-size:10px;color:#555;margin:0}
+.dtr{display:flex;justify-content:space-between;margin-bottom:14px}
+.dn{font-size:16px;font-weight:900;color:#C9A84C}
+.dpa{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.dp2 h4{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.dp2 p{font-size:11px;color:#333;margin:1px 0}
+.dit{width:100%;border-collapse:collapse;margin-bottom:13px}
+.dit th{background:#f5f5f5;padding:7px;font-size:9px;font-weight:700;color:#666;text-transform:uppercase;border-bottom:2px solid #ddd;text-align:left}
+.dit td{padding:7px;font-size:10.5px;border-bottom:1px solid #eee}
+.dtrow{display:flex;justify-content:flex-end;gap:32px;padding:3px 0;font-size:10.5px}
+.dtrow.gd{font-weight:900;font-size:13px;color:#C9A84C;padding-top:6px;border-top:2px solid #C9A84C}
+.df{border-top:1px solid #ddd;padding-top:10px;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dsig{border-top:1px solid #ccc;padding-top:5px;font-size:9px;color:#888;margin-top:34px}
+.dterms{font-size:8.5px;color:#999;line-height:1.6}
+@media print{.tb,.sb,.sa,.no-print{display:none!important}body{overflow:visible}.wrap{display:block}.mn{padding:0}.dp{box-shadow:none}}
+.sb{position:fixed;left:-188px;top:50px;bottom:0;z-index:100;transition:transform 0.3s}
+.sb.open{transform:translateX(188px)}
+@media(max-width:600px){.mn{padding:10px}.fg,.fg3{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}table{font-size:10.5px}th,td{padding:7px 8px}.dpa{grid-template-columns:1fr}}
+
+/* ==============================================================
+   LOGIN GATE
+   ============================================================== */
+#login-gate {
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: var(--bg); align-items: center; justify-content: center;
+  padding: 20px;
+}
+.login-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 28px 24px; width: 100%; max-width: 340px;
+  text-align: center;
+}
+.login-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 12px; }
+.login-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.login-sub { font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+.login-input { width: 100%; margin-bottom: 10px; text-align: left; }
+.login-err { font-size: 11px; color: var(--red); min-height: 16px; margin-top: 6px; }
+
+/* ==============================================================
+   OTP CHALLENGE GATE
+   ============================================================== */
+#otp-gate .mb { max-width: 380px; text-align: center; }
+.otp-digit {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 38px; margin: 2px; border-radius: 8px;
+  color: #fff; font-weight: 900; font-size: 16px; font-family: monospace;
+}
+#otp-challenge-digits { margin: 14px 0 8px; }
+#otp-countdown { font-size: 11px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
+
+/* ==============================================================
+   DOCUMENT SIZE — A4 vs Receipt
+   ============================================================== */
+.dp-a4 { width: 100%; max-width: 210mm; min-height: 297mm; margin: 0 auto; box-sizing: border-box; }
+.dp-receipt { width: 100%; max-width: 297mm; min-height: 210mm; margin: 0 auto; box-sizing: border-box; }
+.dp-receipt .dh { flex-direction: row; align-items: flex-start; text-align: left; }
+.dp-receipt .dco { text-align: right; }
+.dp-receipt .df { grid-template-columns: 1fr 1fr !important; }
+@media print {
+  .dp-a4 { width: 210mm; min-height: 297mm; }
+  .dp-receipt { width: 297mm; min-height: 210mm; }
+}
+
+.sb.open .sb-close-mobile{display:block !important;}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN GATE ===== -->
+<div id="login-gate">
+  <div class="login-box">
+    <img src="logo-dark.png" class="login-logo" alt="Nexotronix">
+    <div class="login-title">Sign in</div>
+    <div class="login-sub">Nexotronix Business Suite</div>
+    <input type="text" id="login-user" class="fi login-input" placeholder="Username" autocomplete="username">
+    <input type="password" id="login-pass" class="fi login-input" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button class="btn bg" style="width:100%;justify-content:center;padding:11px" onclick="checkLogin()">Sign In</button>
+    <div class="login-err" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ===== OTP GATE (Admin-level actions) ===== -->
+<div class="ov" id="otp-gate">
+  <div class="mb">
+    <button class="mc" onclick="cancelOTP()" style="position:absolute;top:14px;right:14px;z-index:1">✕</button>
+    <div class="mh" style="flex-direction:column;text-align:center;border-bottom:none;padding-top:24px;position:relative">
+      <div style="font-size:40px;margin-bottom:8px">🔐</div>
+      <div class="mt" style="font-size:18px">Admin Access</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Secure login required</div>
+    </div>
+    <div class="mbd" style="text-align:center">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Decode the challenge below, then enter the original code</div>
+      <div id="otp-challenge-digits"></div>
+      <div id="otp-countdown">30s</div>
+      <input type="text" id="otp-input" class="fi" placeholder="Enter decoded 6-digit code" style="text-align:center;font-size:16px;letter-spacing:2px;max-width:220px;margin:0 auto 8px" maxlength="6" onkeydown="if(event.key==='Enter')submitOTP()">
+      <div class="login-err" id="otp-error"></div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+        <button class="btn bg" onclick="submitOTP()">Unlock</button>
+        <button class="btn bo sm" onclick="refreshOTPChallenge()">↻ Refresh</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tb">
+  <a href="javascript:void(0)" onclick="handleLogoTap()" style="display:flex;align-items:center;gap:8px;text-decoration:none;-webkit-tap-highlight-color:transparent;" title="">
+    <img id="erp-logo" class="tlogo" src="logo-dark.png" alt="Nexotronix">
+    <div><div class="tbrand">Nexotronix ERP</div><div class="tsub">Business Suite</div></div>
+  </a>
+  <div class="tr">
+    <select id="cur-sel" class="tbtn" style="padding:4px 7px" onchange="setCur(this.value)">
+      <option value="N">&#8358; Naira</option><option value="$">$ Dollar</option>
+      <option value="E">&#8364; Euro</option><option value="L">&#163; Pound</option>
+    </select>
+    <button class="tbtn no-print" id="kv-sync-badge" onclick="manualSync()" title="Tap to sync now" style="font-size:9.5px">⚪ Not synced</button>
+    <button class="tbtn" onclick="toggleTheme()" id="tbtn">☀️</button>
+    <button class="tbtn no-print" onclick="logoutERP()" title="Lock">🔒</button>
+    <a href="index.html" class="tbtn no-print" style="text-decoration:none">&#8594; Store</a>
+  </div>
+</div>
+<div class="wrap">
+<nav class="sb" id="sb"><button onclick="closeSidebar()" style="display:none;width:100%;background:var(--surface2);border:none;border-bottom:1px solid var(--border);color:var(--muted);padding:10px;font-size:11px;cursor:pointer;" class="sb-close-mobile">✕ Close Menu</button>
+  <div class="ns">Overview</div>
+  <div class="ni active" onclick="go('dash')"><span class="ni-ic">&#128202;</span>Dashboard</div>
+  <div class="ns">Documents</div>
+  <div class="ni" onclick="go('inv')"><span class="ni-ic">&#129534;</span>Invoices</div>
+  <div class="ni" onclick="go('qtn')"><span class="ni-ic">&#128203;</span>Quotations</div>
+  <div class="ni" onclick="go('rcp')"><span class="ni-ic">&#129534;</span>Receipts</div>
+  <div class="ni" onclick="go('est')"><span class="ni-ic">&#128208;</span>Estimates</div>
+  <div class="ns">Operations</div>
+  <div class="ni" onclick="go('cust')"><span class="ni-ic">&#128101;</span>Customers</div>
+  <div class="ni" onclick="go('proj')"><span class="ni-ic">&#127959;</span>Projects</div>
+  <div class="ni" onclick="go('pay')"><span class="ni-ic">&#128179;</span>Payments</div>
+  <div class="ni" onclick="go('exp')"><span class="ni-ic">&#128184;</span>Expenses</div>
+  <div class="ni" onclick="go('stock')"><span class="ni-ic">&#128230;</span>Inventory</div>
+  <div class="ns">Analytics</div>
+  <div class="ni" onclick="go('reports')"><span class="ni-ic">&#128200;</span>Reports</div>
+  <div class="ni" onclick="go('profit')"><span class="ni-ic">&#128176;</span>Profit</div>
+  <div class="ns">System</div>
+  <div class="ni" onclick="go('settings')"><span class="ni-ic">&#9881;</span>Settings</div>
+  <div class="ni" onclick="go('audit')"><span class="ni-ic">&#128203;</span>Audit Log</div>
+  <div class="ni" onclick="expAll()"><span class="ni-ic">&#128190;</span>Backup</div>
+</nav>
+<div class="mn">
+
+<!-- DASHBOARD -->
+<div class="panel active" id="p-dash">
+  <div class="sh"><div class="stitle">&#128202; Dashboard</div>
+  <div class="sa"><button class="btn bo sm" onclick="go('dash')">&#8635; Refresh</button></div></div>
+  <div class="stats" id="ds"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+    <div class="fc"><div style="font-size:11.5px;font-weight:700;margin-bottom:6px">&#128200; Monthly Revenue</div><div class="bw2" id="ch-m"></div></div>
+    <div class="fc"><div style="font-size:11.5px;font-weight:700;margin-bottom:8px">&#128202; Payment Status</div><div id="ch-s"></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="fc"><div style="font-size:11.5px;font-weight:700;margin-bottom:10px">&#128293; Recent Invoices</div><div id="d-rec"></div></div>
+    <div class="fc"><div style="font-size:11.5px;font-weight:700;margin-bottom:10px">&#9888; Alerts</div><div id="d-al"></div></div>
+  </div>
+</div>
+
+<!-- INVOICES -->
+<div class="panel" id="p-inv">
+  <div class="sh"><div class="stitle">&#129534; Invoices</div>
+  <div class="sa"><button class="btn bg" onclick="oInv()">+ New Invoice</button></div></div>
+  <div class="sr">
+    <input class="es" id="inv-q" placeholder="Search invoices..." oninput="rInv()">
+    <select class="es" style="flex:0;min-width:110px" id="inv-f" onchange="rInv()">
+      <option value="">All</option><option value="draft">Draft</option><option value="sent">Sent</option>
+      <option value="paid">Paid</option><option value="partial">Partial</option><option value="overdue">Overdue</option>
+    </select>
+  </div>
+  <div class="tw"><table><thead><tr><th>Invoice #</th><th>Customer</th><th>Date</th><th>Due</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody id="inv-tb"></tbody></table></div>
+</div>
+
+<!-- QUOTATIONS -->
+<div class="panel" id="p-qtn">
+  <div class="sh"><div class="stitle">&#128203; Quotations</div>
+  <div class="sa"><button class="btn bg" onclick="oQtn()">+ New Quotation</button></div></div>
+  <div class="sr"><input class="es" id="qtn-q" placeholder="Search quotations..." oninput="rQtn()"></div>
+  <div class="tw"><table><thead><tr><th>QTN #</th><th>Customer</th><th>Date</th><th>Valid Until</th><th>Total</th><th>Actions</th></tr></thead><tbody id="qtn-tb"></tbody></table></div>
+</div>
+
+<!-- RECEIPTS -->
+<div class="panel" id="p-rcp">
+  <div class="sh"><div class="stitle">&#129534; Receipts</div>
+  <div class="sa"><button class="btn bg" onclick="oRcp()">+ New Receipt</button></div></div>
+  <div class="tw"><table><thead><tr><th>RCP #</th><th>Customer</th><th>Invoice Ref</th><th>Date</th><th>Amount</th><th>Method</th><th>Actions</th></tr></thead><tbody id="rcp-tb"></tbody></table></div>
+</div>
+
+<!-- ESTIMATES -->
+<div class="panel" id="p-est">
+  <div class="sh"><div class="stitle">&#128208; Estimates &amp; Cost Breakdown</div>
+  <div class="sa">
+    <button class="btn bg" onclick="oEst()">+ New Estimate</button>
+    <button class="btn bo sm" onclick="oCostCalc()">&#128295; CCTV Calc</button>
+    <button class="btn bo sm" onclick="oSolarCalc()">&#9728; Solar Calc</button>
+  </div></div>
+  <div class="tw"><table><thead><tr><th>EST #</th><th>Customer</th><th>Type</th><th>Date</th><th>Total</th><th>Margin</th><th>Actions</th></tr></thead><tbody id="est-tb"></tbody></table></div>
+</div>
+
+<!-- CUSTOMERS -->
+<div class="panel" id="p-cust">
+  <div class="sh"><div class="stitle">&#128101; Customers</div>
+  <div class="sa"><button class="btn bg" onclick="oCust()">+ Add Customer</button></div></div>
+  <div class="sr"><input class="es" id="cust-q" placeholder="Search customers..." oninput="rCust()"></div>
+  <div class="tw"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>City</th><th>Total Invoiced</th><th>Outstanding</th><th>Actions</th></tr></thead><tbody id="cust-tb"></tbody></table></div>
+</div>
+
+<!-- PROJECTS -->
+<div class="panel" id="p-proj">
+  <div class="sh"><div class="stitle">&#127959; Projects</div>
+  <div class="sa"><button class="btn bg" onclick="oProj()">+ New Project</button></div></div>
+  <div class="tw"><table><thead><tr><th>PRJ #</th><th>Customer</th><th>Type</th><th>Technician</th><th>Start</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody id="proj-tb"></tbody></table></div>
+</div>
+
+<!-- PAYMENTS -->
+<div class="panel" id="p-pay">
+  <div class="sh"><div class="stitle">&#128179; Payment Tracking</div></div>
+  <div class="stats" id="pay-s"></div>
+  <div class="tw"><table><thead><tr><th>Invoice #</th><th>Customer</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th>Due</th><th>Actions</th></tr></thead><tbody id="pay-tb"></tbody></table></div>
+</div>
+
+<!-- EXPENSES -->
+<div class="panel" id="p-exp">
+  <div class="sh"><div class="stitle">&#128184; Expenses</div>
+  <div class="sa"><button class="btn bg" onclick="oExp()">+ Add Expense</button></div></div>
+  <div class="stats" id="exp-s"></div>
+  <div class="tw"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Actions</th></tr></thead><tbody id="exp-tb"></tbody></table></div>
+</div>
+
+<!-- INVENTORY -->
+<div class="panel" id="p-stock">
+  <div class="sh"><div class="stitle">&#128230; Inventory</div></div>
+  <div id="stock-out"></div>
+</div>
+
+<!-- REPORTS -->
+<div class="panel" id="p-reports">
+  <div class="sh"><div class="stitle">&#128200; Reports</div>
+  <div class="sa">
+    <button class="btn bg" onclick="window.print()">&#128438; PDF</button>
+    <button class="btn bo sm" onclick="expCSV()">&#128202; CSV</button>
+  </div></div>
+  <div class="fc"><div class="fg3">
+    <div class="fr"><label class="fl">Type</label><select class="fs" id="rpt-t"><option value="revenue">Revenue</option><option value="invoice">Invoices</option><option value="expense">Expenses</option><option value="profit">P&amp;L</option></select></div>
+    <div class="fr"><label class="fl">From</label><input class="fi" type="date" id="rpt-f"></div>
+    <div class="fr"><label class="fl">To</label><input class="fi" type="date" id="rpt-t2"></div>
+  </div>
+  <button class="btn bg" style="margin-top:10px" onclick="rReport()">&#128269; Generate</button></div>
+  <div id="rpt-out"></div>
+</div>
+
+<!-- PROFIT -->
+<div class="panel" id="p-profit">
+  <div class="sh"><div class="stitle">&#128176; Profit Analysis</div></div>
+  <div class="stats" id="prf-s"></div>
+  <div class="fc"><div style="font-size:11.5px;font-weight:700;margin-bottom:8px">&#128202; Revenue vs Expenses</div><div class="bw2" id="prf-ch"></div></div>
+  <div class="tw"><table><thead><tr><th>Invoice</th><th>Customer</th><th>Revenue</th><th>Est. Cost</th><th>Gross Profit</th><th>Margin</th></tr></thead><tbody id="prf-tb"></tbody></table></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="panel" id="p-settings">
+  <div class="sh"><div class="stitle">&#9881; Settings</div></div>
+  <div class="fc">
+    <div style="font-size:12.5px;font-weight:800;margin-bottom:12px">&#127970; Company Info</div>
+    <div class="fg">
+      <div class="fr"><label class="fl">Company Name</label><input class="fi" id="s-name" value="Nexotronix"></div>
+      <div class="fr"><label class="fl">Phone</label><input class="fi" id="s-phone" value="+234 903 600 6553"></div>
+      <div class="fr ff"><label class="fl">Address</label><input class="fi" id="s-addr" value="Maiduguri, Borno State, Nigeria"></div>
+      <div class="fr"><label class="fl">Email</label><input class="fi" id="s-email"></div>
+      <div class="fr"><label class="fl">WhatsApp</label><input class="fi" id="s-wa" value="2349036006553"></div>
+      <div class="fr"><label class="fl">Currency</label>
+        <select class="fs" id="s-cur"><option value="N">&#8358; Naira</option><option value="$">$ Dollar</option><option value="E">&#8364; Euro</option><option value="L">&#163; Pound</option></select></div>
+      <div class="fr"><label class="fl">Tax %</label><input class="fi" id="s-tax" type="number" value="7.5"></div>
+      <div class="fr ff"><label class="fl">Default Terms</label><textarea class="ft" id="s-terms">Payment due within 7 days. All sales final.</textarea></div>
+    </div>
+    <button class="btn bg" onclick="saveS()" style="margin-top:10px">&#128190; Save Settings</button>
+  </div>
+  <div class="fc">
+    <div style="font-size:12.5px;font-weight:800;margin-bottom:12px">&#128272; Login Credentials</div>
+    <div class="fg">
+      <div class="fr"><label class="fl">Username</label><input class="fi" id="cred-user" placeholder="admin"></div>
+      <div class="fr"><label class="fl">New Password</label><input class="fi" id="cred-pass" type="password" placeholder="Leave blank to keep current"></div>
+    </div>
+    <button class="btn bg" onclick="saveCreds()" style="margin-top:10px">&#128190; Update Login</button>
+  </div>
+  <div class="fc">
+    <div style="font-size:12.5px;font-weight:800;margin-bottom:12px">&#128190; Backup &amp; Recovery</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn bgn sm" onclick="expAll()">&#128229; Export All</button>
+      <button class="btn bb sm" onclick="document.getElementById('imp').click()">&#128228; Import</button>
+      <button class="btn br sm" onclick="requireOTP(clrAll)">&#128465; Clear All</button>
+    </div>
+    <input type="file" id="imp" accept=".json" style="display:none" onchange="impData(event)">
+  </div>
+</div>
+
+<!-- AUDIT -->
+<div class="panel" id="p-audit">
+  <div class="sh"><div class="stitle">&#128203; Audit Log</div>
+  <div class="sa"><button class="btn br sm" onclick="if(confirm('Clear log?')){DB.s('audit',[]);rAudit()}">Clear</button></div></div>
+  <div class="tw"><table><thead><tr><th>Timestamp</th><th>Action</th><th>Details</th></tr></thead><tbody id="audit-tb"></tbody></table></div>
+</div>
+
+</div></div>
+
+<!-- MODALS -->
+<!-- Invoice -->
+<div class="ov" id="m-inv">
+<div class="mb"><div class="mh"><div class="mt" id="inv-mt">&#129534; New Invoice</div><button class="mc" onclick="cm('m-inv')">&#10005;</button></div>
+<div class="mbd">
+  <div class="fg">
+    <div class="fr"><label class="fl">Invoice #</label><input class="fi" id="inv-num" readonly></div>
+    <div class="fr"><label class="fl">Status</label><select class="fs" id="inv-st"><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="partial">Partial</option><option value="overdue">Overdue</option><option value="cancelled">Cancelled</option></select></div>
+    <div class="fr"><label class="fl">Customer</label><input class="fi" id="inv-cu" list="cl"></div>
+    <div class="fr"><label class="fl">Phone</label><input class="fi" id="inv-ph"></div>
+    <div class="fr"><label class="fl">Address</label><input class="fi" id="inv-ad"></div>
+    <div class="fr"><label class="fl">Invoice Date</label><input class="fi" type="date" id="inv-dt"></div>
+    <div class="fr"><label class="fl">Due Date</label><input class="fi" type="date" id="inv-du"></div>
+    <div class="fr"><label class="fl">Terms</label><select class="fs" id="inv-tm"><option>Immediate</option><option selected>7 days</option><option>14 days</option><option>30 days</option></select></div>
+  </div>
+  <div style="font-size:11.5px;font-weight:700;margin:12px 0 6px">&#128230; Items</div>
+  <div class="it"><table><thead><tr><th>Item/Service</th><th>Qty</th><th>Unit Price</th><th>Total</th><th></th></tr></thead><tbody id="inv-ib"></tbody></table></div>
+  <button class="btn bo sm" onclick="aIR()" style="margin-bottom:10px">+ Add Item</button>
+  <div class="fg">
+    <div class="fr"><label class="fl">Discount %</label><input class="fi" id="inv-di" type="number" value="0" oninput="cI()"></div>
+    <div class="fr"><label class="fl">Tax %</label><input class="fi" id="inv-tx" type="number" value="0" oninput="cI()"></div>
+    <div class="fr"><label class="fl">Amount Paid</label><input class="fi" id="inv-pd" type="number" value="0" oninput="cI()"></div>
+    <div class="fr"><label class="fl">Notes</label><input class="fi" id="inv-nt"></div>
+  </div>
+  <div id="inv-tb2" class="tbox"></div>
+  <input type="hidden" id="inv-eid">
+  <div style="display:flex;gap:6px;margin-top:13px;flex-wrap:wrap">
+    <button class="btn bg" onclick="sInv()">&#128190; Save</button>
+    <button class="btn bo" onclick="pDoc('inv')">&#128065; Preview</button>
+    <button class="btn bb" onclick="prD('inv')">&#128424; Print/PDF</button>
+    <button class="btn bgn sm" onclick="downloadPDFFromForm('inv')">&#128229; Save PDF</button>
+    <button class="btn bw sm" onclick="wDoc('inv')">&#128172; WhatsApp</button>
+  </div>
+</div></div></div>
+
+<!-- Quotation -->
+<div class="ov" id="m-qtn">
+<div class="mb"><div class="mh"><div class="mt">&#128203; New Quotation</div><button class="mc" onclick="cm('m-qtn')">&#10005;</button></div>
+<div class="mbd">
+  <div class="fg">
+    <div class="fr"><label class="fl">QTN #</label><input class="fi" id="qtn-num" readonly></div>
+    <div class="fr"><label class="fl">Valid Until</label><input class="fi" type="date" id="qtn-vl"></div>
+    <div class="fr"><label class="fl">Customer</label><input class="fi" id="qtn-cu" list="cl"></div>
+    <div class="fr"><label class="fl">Phone</label><input class="fi" id="qtn-ph"></div>
+    <div class="fr"><label class="fl">Date</label><input class="fi" type="date" id="qtn-dt"></div>
+    <div class="fr"><label class="fl">Subject</label><input class="fi" id="qtn-su" placeholder="e.g. Solar Installation Proposal"></div>
+  </div>
+  <div style="font-size:11.5px;font-weight:700;margin:12px 0 6px">&#128230; Items</div>
+  <div class="it"><table><thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Total</th><th></th></tr></thead><tbody id="qtn-ib"></tbody></table></div>
+  <button class="btn bo sm" onclick="aQR()" style="margin-bottom:10px">+ Add Item</button>
+  <div class="fg">
+    <div class="fr"><label class="fl">Discount %</label><input class="fi" id="qtn-di" type="number" value="0" oninput="cQ()"></div>
+    <div class="fr"><label class="fl">Tax %</label><input class="fi" id="qtn-tx" type="number" value="0" oninput="cQ()"></div>
+    <div class="fr"><label class="fl">Notes</label><input class="fi" id="qtn-nt"></div>
+  </div>
+  <div id="qtn-tb2" class="tbox"></div>
+  <input type="hidden" id="qtn-eid">
+  <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+    <button class="btn bg" onclick="sQtn()">&#128190; Save</button>
+    <button class="btn bo" onclick="pDoc('qtn')">&#128065; Preview</button>
+    <button class="btn bb sm" onclick="prD('qtn')">&#128424; Print</button>
+    <button class="btn bgn sm" onclick="downloadPDFFromForm('qtn')">&#128229; Save PDF</button>
+    <button class="btn bw sm" onclick="wDoc('qtn')">&#128172; WhatsApp</button>
+    <button class="btn bgn sm" onclick="qToInv()">&#8594; Invoice</button>
+  </div>
+</div></div></div>
+
+<!-- Receipt -->
+<div class="ov" id="m-rcp">
+<div class="mb" style="max-width:500px"><div class="mh"><div class="mt">&#129534; New Receipt</div><button class="mc" onclick="cm('m-rcp')">&#10005;</button></div>
+<div class="mbd"><div class="fg">
+  <div class="fr"><label class="fl">RCP #</label><input class="fi" id="rcp-num" readonly></div>
+  <div class="fr"><label class="fl">Date</label><input class="fi" type="date" id="rcp-dt"></div>
+  <div class="fr"><label class="fl">Customer</label><input class="fi" id="rcp-cu" list="cl"></div>
+  <div class="fr"><label class="fl">Invoice Ref</label><input class="fi" id="rcp-inv" placeholder="INV-2026-0001"></div>
+  <div class="fr"><label class="fl">Amount Paid</label><input class="fi" id="rcp-am" type="number"></div>
+  <div class="fr"><label class="fl">Method</label><select class="fs" id="rcp-mt"><option>Cash</option><option>Bank Transfer</option><option>POS</option><option>Mobile Money</option><option>Cheque</option></select></div>
+  <div class="fr ff"><label class="fl">Notes</label><input class="fi" id="rcp-nt"></div>
+</div>
+<input type="hidden" id="rcp-eid">
+<div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+  <button class="btn bg" onclick="sRcp()">&#128190; Save</button>
+  <button class="btn bb sm" onclick="prD('rcp')">&#128424; Print</button>
+  <button class="btn bgn sm" onclick="downloadPDFFromForm('rcp')">&#128229; Save PDF</button>
+  <button class="btn bw sm" onclick="wDoc('rcp')">&#128172; WhatsApp</button>
+</div>
+</div></div></div>
+
+<!-- Estimate -->
+<div class="ov" id="m-est">
+<div class="mb"><div class="mh"><div class="mt">&#128208; Service Estimate</div><button class="mc" onclick="cm('m-est')">&#10005;</button></div>
+<div class="mbd">
+  <div class="fg">
+    <div class="fr"><label class="fl">EST #</label><input class="fi" id="est-num" readonly></div>
+    <div class="fr"><label class="fl">Service Type</label><select class="fs" id="est-ty"><option>CCTV Installation</option><option>Solar Installation</option><option>Networking/WiFi</option><option>Satellite Dish</option><option>Smart Home</option><option>Device Repair</option><option>Sound System</option><option>Custom</option></select></div>
+    <div class="fr"><label class="fl">Customer</label><input class="fi" id="est-cu" list="cl"></div>
+    <div class="fr"><label class="fl">Date</label><input class="fi" type="date" id="est-dt"></div>
+  </div>
+  <div style="font-size:11.5px;font-weight:700;margin:12px 0 6px">&#128295; Cost Breakdown</div>
+  <div class="it"><table><thead><tr><th>Item</th><th>Category</th><th>Qty</th><th>Unit Cost</th><th>Total</th><th></th></tr></thead><tbody id="est-ib"></tbody></table></div>
+  <button class="btn bo sm" onclick="aER()" style="margin-bottom:10px">+ Add Item</button>
+  <div class="fg">
+    <div class="fr"><label class="fl">Profit Margin %</label><input class="fi" id="est-mg" type="number" value="20" oninput="cE()"></div>
+    <div class="fr"><label class="fl">Transport Cost</label><input class="fi" id="est-tr" type="number" value="0" oninput="cE()"></div>
+    <div class="fr"><label class="fl">Notes</label><input class="fi" id="est-nt"></div>
+  </div>
+  <div id="est-tb2" class="tbox"></div>
+  <input type="hidden" id="est-eid">
+  <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+    <button class="btn bg" onclick="sEst()">&#128190; Save</button>
+    <button class="btn bb sm" onclick="prD('est')">&#128424; Print</button>
+    <button class="btn bgn sm" onclick="downloadPDFFromForm('est')">&#128229; Save PDF</button>
+    <button class="btn bw sm" onclick="wDoc('est')">&#128172; WhatsApp</button>
+    <button class="btn bgn sm" onclick="eToInv()">&#8594; Invoice</button>
+  </div>
+</div></div></div>
+
+<!-- Customer -->
+<div class="ov" id="m-cust">
+<div class="mb" style="max-width:480px"><div class="mh"><div class="mt">&#128100; Customer</div><button class="mc" onclick="cm('m-cust')">&#10005;</button></div>
+<div class="mbd"><div class="fg">
+  <div class="fr"><label class="fl">Full Name</label><input class="fi" id="c-nm"></div>
+  <div class="fr"><label class="fl">Phone</label><input class="fi" id="c-ph"></div>
+  <div class="fr"><label class="fl">Email</label><input class="fi" id="c-em"></div>
+  <div class="fr"><label class="fl">City</label><input class="fi" id="c-cy" value="Maiduguri"></div>
+  <div class="fr ff"><label class="fl">Address</label><input class="fi" id="c-ad"></div>
+</div>
+<input type="hidden" id="c-eid">
+<button class="btn bg" onclick="sCust()" style="margin-top:10px">&#128190; Save</button>
+</div></div></div>
+
+<!-- Project -->
+<div class="ov" id="m-proj">
+<div class="mb" style="max-width:520px"><div class="mh"><div class="mt">&#127959; Project</div><button class="mc" onclick="cm('m-proj')">&#10005;</button></div>
+<div class="mbd"><div class="fg">
+  <div class="fr"><label class="fl">Project ID</label><input class="fi" id="prj-id" readonly></div>
+  <div class="fr"><label class="fl">Type</label><select class="fs" id="prj-ty"><option>Solar Installation</option><option>CCTV Installation</option><option>Networking</option><option>Satellite Dish</option><option>Smart Home</option><option>Device Repair</option><option>Other</option></select></div>
+  <div class="fr"><label class="fl">Customer</label><input class="fi" id="prj-cu" list="cl"></div>
+  <div class="fr"><label class="fl">Technician</label><input class="fi" id="prj-tc"></div>
+  <div class="fr"><label class="fl">Start Date</label><input class="fi" type="date" id="prj-sd"></div>
+  <div class="fr"><label class="fl">Deadline</label><input class="fi" type="date" id="prj-ed"></div>
+  <div class="fr"><label class="fl">Status</label><select class="fs" id="prj-st"><option value="pending">Pending</option><option value="approved">Approved</option><option value="scheduled">Scheduled</option><option value="progress">In Progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+  <div class="fr"><label class="fl">Budget</label><input class="fi" id="prj-bu" type="number"></div>
+  <div class="fr ff"><label class="fl">Notes</label><textarea class="ft" id="prj-nt"></textarea></div>
+</div>
+<input type="hidden" id="prj-eid">
+<button class="btn bg" onclick="sProj()" style="margin-top:10px">&#128190; Save</button>
+</div></div></div>
+
+<!-- Expense -->
+<div class="ov" id="m-exp">
+<div class="mb" style="max-width:440px"><div class="mh"><div class="mt">&#128184; Add Expense</div><button class="mc" onclick="cm('m-exp')">&#10005;</button></div>
+<div class="mbd"><div class="fg">
+  <div class="fr"><label class="fl">Date</label><input class="fi" type="date" id="exp-dt"></div>
+  <div class="fr"><label class="fl">Category</label><select class="fs" id="exp-ct"><option>Transportation</option><option>Salaries</option><option>Equipment</option><option>Internet</option><option>Utilities</option><option>Marketing</option><option>Miscellaneous</option></select></div>
+  <div class="fr ff"><label class="fl">Description</label><input class="fi" id="exp-ds"></div>
+  <div class="fr"><label class="fl">Amount</label><input class="fi" id="exp-am" type="number"></div>
+</div>
+<input type="hidden" id="exp-eid">
+<button class="btn bg" onclick="sExp()" style="margin-top:10px">&#128190; Save</button>
+</div></div></div>
+
+<!-- Preview -->
+<div class="ov" id="m-prev">
+<div class="mb" style="max-width:660px"><div class="mh">
+  <div class="mt" id="prev-t">Preview</div>
+  <div style="display:flex;gap:6px"><button class="btn bb sm" onclick="window.print()">&#128424; Print/PDF</button><button class="mc" onclick="cm('m-prev')">&#10005;</button></div>
+</div><div class="mbd" id="prev-body"></div></div></div>
+
+<datalist id="cl"></datalist>
+
+<script src="fatcarbohydrate.js"></script>
+</body>
+</html>

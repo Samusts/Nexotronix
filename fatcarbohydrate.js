@@ -684,23 +684,46 @@ function wDoc(type) {
    Uses html2pdf.js (CDN) to rasterize the preview into a real PDF.
    Falls back to text-message WhatsApp link if file-share unsupported.
    ============================================================== */
-function downloadPDF(type, doc) {
-  const html = bDoc(type, doc, true); // true = pdfMode (forces print colors/sizing)
+function _buildPdfWrap(html) {
   const wrap = document.createElement('div');
   wrap.innerHTML = html;
-  wrap.style.position = 'fixed'; wrap.style.left = '-9999px';
+  wrap.style.position = 'absolute';
+  wrap.style.top = '0';
+  wrap.style.left = '0';
+  wrap.style.opacity = '0';
+  wrap.style.pointerEvents = 'none';
+  wrap.style.zIndex = '-1';
   document.body.appendChild(wrap);
+  return wrap;
+}
+
+function _waitForImages(el) {
+  const imgs = el.querySelectorAll('img');
+  return Promise.all(Array.from(imgs).map(function(img) {
+    if (img.complete) return Promise.resolve();
+    return new Promise(function(resolve) {
+      img.onload = resolve;
+      img.onerror = resolve;
+    });
+  }));
+}
+
+function downloadPDF(type, doc) {
+  const html = bDoc(type, doc, true);
+  const wrap = _buildPdfWrap(html);
   const opt = {
     margin: 0,
     filename: (doc.num || 'document') + '.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: type === 'rcp' ? [80, 200] : 'a4', orientation: 'portrait' }
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+    jsPDF: { unit: 'mm', format: type === 'rcp' ? 'a4' : 'a4', orientation: type === 'rcp' ? 'landscape' : 'portrait' }
   };
-  html2pdf().set(opt).from(wrap).save().then(() => {
+  _waitForImages(wrap).then(function () {
+    return html2pdf().set(opt).from(wrap).save();
+  }).then(function () {
     document.body.removeChild(wrap);
     toast('📄 PDF downloaded!');
-  }).catch(() => {
+  }).catch(function () {
     document.body.removeChild(wrap);
     toast('⚠️ PDF generation failed — try Print instead');
   });
@@ -716,18 +739,17 @@ function downloadPDFFromForm(type) {
 
 function sharePDF(type, doc) {
   const html = bDoc(type, doc, true);
-  const wrap = document.createElement('div');
-  wrap.innerHTML = html;
-  wrap.style.position = 'fixed'; wrap.style.left = '-9999px';
-  document.body.appendChild(wrap);
+  const wrap = _buildPdfWrap(html);
   const opt = {
     margin: 0,
     filename: (doc.num || 'document') + '.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: type === 'rcp' ? [80, 200] : 'a4', orientation: 'portrait' }
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: type === 'rcp' ? 'landscape' : 'portrait' }
   };
-  html2pdf().set(opt).from(wrap).outputPdf('blob').then(blob => {
+  _waitForImages(wrap).then(function () {
+    return html2pdf().set(opt).from(wrap).outputPdf('blob');
+  }).then(blob => {
     document.body.removeChild(wrap);
     const file = new File([blob], (doc.num || 'document') + '.pdf', { type: 'application/pdf' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
