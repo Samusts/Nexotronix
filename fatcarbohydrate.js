@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded',function(){
 let _otpReal = null;
 let _otpExpiry = 0;
 let _otpAttempts = 0;
-const OTP_WINDOW_MS = 30000;
+const OTP_WINDOW_MS = 120000; // 2 minutes
 const OTP_MAX_ATTEMPTS = 5;
 
 function _genOTP() {
@@ -482,10 +482,13 @@ function renderOTPChallenge(digits, colors) {
 function startOTPCountdown() {
   const el = document.getElementById('otp-countdown');
   if (!el) return;
+  el.style.color = '';
   clearInterval(window._otpTimer);
   window._otpTimer = setInterval(() => {
     const left = Math.max(0, Math.ceil((_otpExpiry - Date.now()) / 1000));
-    el.textContent = left + 's';
+    const m = Math.floor(left / 60);
+    const s = left % 60;
+    el.textContent = m > 0 ? (m + ':' + String(s).padStart(2, '0')) : (s + 's');
     if (left <= 0) {
       clearInterval(window._otpTimer);
       el.textContent = 'Expired — tap Refresh';
