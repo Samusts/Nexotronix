@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Nexotronix — Your trusted tech store in Maiduguri, Nigeria. Premium brand new &amp; UK-used phones, laptops, gaming devices. Fast delivery &amp; installation services.">
+<meta name="keywords" content="phones Maiduguri, laptops Nigeria, gaming devices, UK used phones, brand new phones Maiduguri">
+<meta name="theme-color" content="#0a0a0a">
+<title>Nexotronix — Premium Tech Store | Phones, Laptops & Services in Maiduguri</title>
+
+  <meta property="og:title" content="Nexotronix — Premium Tech Store">
+  <meta property="og:description" content="Premium phones, laptops, gaming &amp; installation services in Maiduguri, Nigeria.">
+  <meta property="og:image" content="https://samusts.github.io/Nexotronix/logo-dark.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://samusts.github.io/Nexotronix/">
+  <link rel="icon" type="image/png" href="logo-dark.png">
+  <link rel="apple-touch-icon" href="logo-dark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="index.css">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nexotronix">
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <!-- Performance -->
+  <link rel="dns-prefetch" href="https://nexotronix-proxy.samuelphilip002.workers.dev">
+  <link rel="preconnect" href="https://nexotronix-proxy.samuelphilip002.workers.dev">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img id="site-logo" src="logo-dark.png" alt="Nexotronix" class="nav-logo-img">
+      <div class="logo-text">Nexo<span>tronix</span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#featured">Featured</a>
+      <a href="#trust">About</a>
+    </div>
+    <div class="nav-actions">
+      <div class="notif-wrapper" style="position:static;display:inline-flex;">
+        <button class="notif-bell nav-btn" onclick="toggleNotifPanel(event)" title="Notifications" style="position:relative;">
+          🔔
+          <span class="notif-badge" id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#e53e3e;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:800;align-items:center;justify-content:center;">0</span>
+        </button>
+        <div class="notif-panel" id="notif-panel" style="display:none;position:fixed;top:62px;right:10px;left:10px;max-width:360px;margin-left:auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-height:72vh;overflow-y:auto;">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;">
+            🔔 Notifications
+            <button onclick="clearNotifs()" style="font-size:10px;color:var(--text-muted);background:none;border:none;cursor:pointer;">Clear all</button>
+          </div>
+          <div id="notif-list" style="padding:8px;"></div>
+        </div>
+      </div>
+      <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <button class="nav-search-btn" style="width:38px;height:38px;background:var(--surface);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;" onclick="focusSearch()">🔍</button>
+      <button class="nav-search-btn" style="width:38px;height:38px;background:var(--surface);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;" onclick="openCart()" id="nav-cart-btn">
+        🛒<span id="nav-cart-count" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--gold);color:#0a0a0a;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;"></span>
+      </button>
+      <a class="btn-wa-nav" href="https://wa.me/2349036006553" target="_blank">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.549 4.122 1.51 5.857L.057 23.882l6.207-1.63A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.37l-.36-.213-3.683.967.983-3.596-.234-.371A9.82 9.82 0 012.182 12c0-5.422 4.396-9.818 9.818-9.818 5.422 0 9.818 4.396 9.818 9.818 0 5.422-4.396 9.818-9.818 9.818z"/></svg>
+        WhatsApp
+      </a>
+      <button class="hamburger" onclick="toggleMenu()" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <a href="#products" onclick="toggleMenu()">Products</a>
+  <a href="#featured" onclick="toggleMenu()">Featured</a>
+  <a href="#trust" onclick="toggleMenu()">About Us</a>
+  <a href="https://wa.me/2349036006553" target="_blank">📲 WhatsApp Us</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<!-- <section id="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Maiduguri's #1 Tech Store
+      </div>
+      <h1 class="hero-title">
+        Premium Phones,<br>
+        Laptops &<br><span class="accent">Gaming Devices</span><br>in Nigeria.
+      </h1>
+      <p class="hero-sub">Smart Tech, Reliable Service — genuine brand new & UK-used devices at unbeatable prices. Fast delivery, real warranty.</p>
+      <div class="hero-ctas">
+        <a href="#products" class="btn-primary">⚡ Shop Now</a>
+        <a href="https://wa.me/2349036006553?text=Hi%20Elite%20Tech!%20I%20want%20to%20shop%20for%20a%20device." target="_blank" class="btn-wa">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.549 4.122 1.51 5.857L.057 23.882l6.207-1.63A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.37l-.36-.213-3.683.967.983-3.596-.234-.371A9.82 9.82 0 012.182 12c0-5.422 4.396-9.818 9.818-9.818 5.422 0 9.818 4.396 9.818 9.818 0 5.422-4.396 9.818-9.818 9.818z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Happy Customers</div></div>
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Genuine Products</div></div>
+        <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Fast Delivery</div></div>
+        <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Customer Rating</div></div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- ===== MARQUEE STRIP ===== -->
+<div class="marquee-strip">
+  <div class="marquee-inner" id="marquee-inner">
+    <span class="marquee-item">✅ 100% Genuine Devices</span>
+    <span class="marquee-item">🚚 Same-Day Delivery in Maiduguri</span>
+    <span class="marquee-item">🛡️ Warranty on All Products</span>
+    <span class="marquee-item">📲 Order via WhatsApp</span>
+    <span class="marquee-item">💰 Best Prices in Nigeria</span>
+    <span class="marquee-item">🔄 7-Day Easy Returns</span>
+    <span class="marquee-item">📦 Nationwide Shipping</span>
+    <span class="marquee-item">🤖 AI Product Advisor</span>
+    <span class="marquee-item">✅ 100% Genuine Devices</span>
+    <span class="marquee-item">🚚 Same-Day Delivery in Maiduguri</span>
+    <span class="marquee-item">🛡️ Warranty on All Products</span>
+    <span class="marquee-item">📲 Order via WhatsApp</span>
+    <span class="marquee-item">💰 Best Prices in Nigeria</span>
+    <span class="marquee-item">🔄 7-Day Easy Returns</span>
+    <span class="marquee-item">📦 Nationwide Shipping</span>
+    <span class="marquee-item">🤖 AI Product Advisor</span>
+  </div>
+</div>
+
+<!-- ===== SEARCH BAR ===== -->
+<div id="header-spacer" style="height:0;transition:height 0.1s;pointer-events:none;"></div>
+
+<!-- ===== SERVICES ===== -->
+<section id="services">
+  <div class="svc-hero-inner">
+    <div class="svc-hero-eyebrow">🔧 WHAT WE OFFER</div>
+    <h2 class="svc-hero-title">Professional Services</h2>
+    <p class="svc-hero-sub">Expert installation & tech support in Maiduguri</p>
+    <div class="svc-cards-grid" id="services-grid">
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20CCTV%20Installation" target="_blank" class="svc-card" style="--sc:#3182ce">
+        <span class="svc-icon">📷</span><span class="svc-name">CCTV</span><span class="svc-sub">Installation</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20Satellite%20Dish" target="_blank" class="svc-card" style="--sc:#805ad5">
+        <span class="svc-icon">📡</span><span class="svc-name">Satellite</span><span class="svc-sub">Dish Setup</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20Solar%20installation" target="_blank" class="svc-card" style="--sc:#d69e2e">
+        <span class="svc-icon">☀️</span><span class="svc-name">Solar</span><span class="svc-sub">Installation</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20Sound%20System" target="_blank" class="svc-card" style="--sc:#38a169">
+        <span class="svc-icon">🔊</span><span class="svc-name">Sound</span><span class="svc-sub">System Setup</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20Device%20Repair" target="_blank" class="svc-card" style="--sc:#e53e3e">
+        <span class="svc-icon">🔧</span><span class="svc-name">Repairs</span><span class="svc-sub">All Devices</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20Networking" target="_blank" class="svc-card" style="--sc:#00b5d8">
+        <span class="svc-icon">📶</span><span class="svc-name">Networking</span><span class="svc-sub">WiFi Setup</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20I%20need%20Computer%20Services" target="_blank" class="svc-card" style="--sc:#c05621">
+        <span class="svc-icon">💻</span><span class="svc-name">Computer</span><span class="svc-sub">Services</span><span class="svc-btn">Book →</span>
+      </a>
+      <a href="https://wa.me/2349036006553?text=Hi%20Nexotronix%2C%20custom%20request" target="_blank" class="svc-card" style="--sc:#553c9a">
+        <span class="svc-icon">🔌</span><span class="svc-name">Custom</span><span class="svc-sub">Any Request</span><span class="svc-btn">Book →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div id="search-bar">
+  <div class="search-inner" id="search-inner-collapsible" style="display:none;">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search phones, laptops, gaming devices..." oninput="filterProducts(); Analytics.trackSearch(this.value)">
+    </div>
+  </div>
+  
+</div>
+
+<!-- ===== CATEGORIES ===== -->
+<!-- <section id="categories">
+  <div class="container" style="padding-top:72px;padding-bottom:72px;">
+    <div class="section-header center">
+      <span class="section-eyebrow">Browse By Category</span>
+      <h2 class="section-title">What are you looking for?</h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="setFilter('phone', null); document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-icon-wrap">📱</div>
+        <div class="cat-name">Smartphones</div>
+        <div class="cat-count" id="cat-count-phone">Loading...</div>
+      </div>
+      <div class="cat-card" onclick="setFilter('laptop', null); document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-icon-wrap">💻</div>
+        <div class="cat-name">Laptops</div>
+        <div class="cat-count" id="cat-count-laptop">Loading...</div>
+      </div>
+      <div class="cat-card" onclick="setFilter('gaming', null); document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-icon-wrap">🎮</div>
+        <div class="cat-name">Gaming Devices</div>
+        <div class="cat-count" id="cat-count-gaming">Loading...</div>
+      </div>
+      <div class="cat-card" onclick="setFilter('accessory', null); document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-icon-wrap">🎧</div>
+        <div class="cat-name">Accessories</div>
+        <div class="cat-count" id="cat-count-accessory">Loading...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUCTS ===== -->
+<section id="products">
+  <div class="container" style="padding-top:64px;padding-bottom:80px;">
+    <div class="products-header" style="margin-bottom:12px;">
+      <div class="section-eyebrow" style="padding:0 0 6px;">Browse Products</div>
+      <div class="filter-row search-pills-row">
+        <button class="pill active" data-cat="all" onclick="setFilter('all', this)">All</button>
+        <button class="pill" data-cat="phone" onclick="setFilter('phone', this)">📱 Phones</button>
+        <button class="pill" data-cat="laptop" onclick="setFilter('laptop', this)">💻 Laptops</button>
+        <button class="pill" data-cat="gaming" onclick="setFilter('gaming', this)">🎮 Gaming</button>
+        <button class="pill" data-cat="accessory" onclick="setFilter('accessory', this)">🎧 Accessories</button>
+        <button class="pill" data-cond="new" onclick="setCondFilter('new', this)">🟢 New</button>
+        <button class="pill" data-cond="used" onclick="setCondFilter('used', this)">🟡 UK Used</button>
+      </div>
+    </div>
+    <div id="product-grid"></div>
+  </div>
+</section>
+
+<!-- ===== FEATURED CAROUSEL ===== -->
+<section id="featured">
+  <div class="container" style="padding-top:64px;padding-bottom:64px;">
+<!-- (old pills location — moved into Products section) -->
+    <div class="section-header center">
+      <span class="section-eyebrow">Editor's Pick</span>
+      <h2 class="section-title">Featured Products</h2>
+      <p class="section-sub">Hand-picked premium devices our customers love most</p>
+    </div>
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="carousel-track"></div>
+    </div>
+    <div class="carousel-progress"><div class="carousel-progress-bar" id="carousel-progress-bar"></div></div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" onclick="carousel(-1)">←</button>
+      <div class="carousel-dots" id="carousel-dots"></div>
+      <button class="carousel-btn" onclick="carousel(1)">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DEAL COUNTDOWN ===== -->
+<section id="deal-section">
+  <div class="container">
+    <div class="deal-banner">
+      <div style="flex:1;">
+        <div class="deal-label">🔥 Limited Time Offer</div>
+        <h2 class="deal-title">Flash Deal — Up to 20% Off<br>Selected Devices</h2>
+        <p class="deal-sub">Premium UK-used iPhones and Samsung flagships at unbeatable prices. Chat us to claim your deal before it expires.</p>
+        <div class="countdown">
+          <div class="count-block"><span class="count-num" id="count-h">00</span><div class="count-label">Hours</div></div>
+          <div class="count-sep">:</div>
+          <div class="count-block"><span class="count-num" id="count-m">00</span><div class="count-label">Mins</div></div>
+          <div class="count-sep">:</div>
+          <div class="count-block"><span class="count-num" id="count-s">00</span><div class="count-label">Secs</div></div>
+        </div>
+        <a href="https://wa.me/2349036006553?text=Hi!%20I%20want%20to%20claim%20the%20flash%20deal!" target="_blank" class="btn-primary" style="display:inline-flex;">💬 Claim Deal on WhatsApp</a>
+      </div>
+      <div style="flex-shrink:0;text-align:center;">
+        <div style="font-size:90px;margin-bottom:12px;">📱</div>
+        <div style="font-size:13px;color:var(--text-muted);font-weight:500;">iPhones from ₦280,000</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">While stock lasts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRENDING ===== -->
+<section id="trending">
+  <div class="container" style="padding-top:64px;padding-bottom:64px;">
+    <div class="section-header">
+      <span class="section-eyebrow">Hot Right Now</span>
+      <h2 class="section-title">Trending This Week</h2>
+    </div>
+    <div class="trending-grid" id="trending-grid"></div>
+  </div>
+</section>
+
+<!-- ===== TRUST SECTION ===== -->
+<section id="trust">
+  <div class="container" style="padding-top:64px;padding-bottom:64px;">
+    <div class="section-header center">
+      <span class="section-eyebrow">Why Choose Us</span>
+      <h2 class="section-title">The Elite Difference</h2>
+      <p class="section-sub">We don't just sell tech — we deliver trust</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card"><div class="trust-icon">✅</div><div class="trust-title">100% Genuine</div><div class="trust-desc">Every device verified. Brand new sealed & certified UK-used items only. No fakes, ever.</div></div>
+      <div class="trust-card"><div class="trust-icon">🚚</div><div class="trust-title">Fast Delivery</div><div class="trust-desc">Same-day delivery in Maiduguri. Nationwide delivery within 1–3 business days.</div></div>
+      <div class="trust-card"><div class="trust-icon">🛡️</div><div class="trust-title">Warranty & Support</div><div class="trust-desc">All devices come with warranty support. After-sales service that actually cares.</div></div>
+      <div class="trust-card"><div class="trust-icon">💬</div><div class="trust-title">WhatsApp Support</div><div class="trust-desc">Reach us instantly on WhatsApp. Real humans, fast replies, 7 days a week.</div></div>
+      <div class="trust-card"><div class="trust-icon">💰</div><div class="trust-title">Best Prices</div><div class="trust-desc">Competitive pricing on every product. Price-match guarantee available — ask us!</div></div>
+      <div class="trust-card"><div class="trust-icon">🔄</div><div class="trust-title">Easy Returns</div><div class="trust-desc">Not satisfied? Hassle-free returns within 7 days on all eligible items.</div></div>
+      <div class="trust-card"><div class="trust-icon">🏆</div><div class="trust-title">500+ Customers</div><div class="trust-desc">Trusted by hundreds of customers across Maiduguri and all over Nigeria.</div></div>
+      <div class="trust-card"><div class="trust-icon">📲</div><div class="trust-title">Installment Plans</div><div class="trust-desc">Flexible payment plans available. Chat with us to discuss what works for you.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section id="testimonials">
+  <div class="container" style="padding-top:64px;padding-bottom:64px;">
+    <div class="section-header center">
+      <span class="section-eyebrow">Customer Reviews</span>
+      <h2 class="section-title">What Our Customers Say</h2>
+    </div>
+    <div class="testi-grid" id="testi-grid"></div>
+    <div class="testi-dots" id="testi-dots"></div>
+
+    <!-- Feedback Form -->
+    <div class="feedback-form-wrap">
+      <div class="feedback-form-title">✍️ Leave Your Review</div>
+      <div class="feedback-form-sub">Share your experience with Nexotronix</div>
+      <div class="feedback-stars-row" id="star-row">
+        <button class="star-btn" onclick="setStars(1)">⭐</button>
+        <button class="star-btn" onclick="setStars(2)">⭐</button>
+        <button class="star-btn" onclick="setStars(3)">⭐</button>
+        <button class="star-btn" onclick="setStars(4)">⭐</button>
+        <button class="star-btn" onclick="setStars(5)">⭐</button>
+      </div>
+      <div class="feedback-inputs">
+        <input type="text" id="review-name" placeholder="Your name (e.g. Ahmad from Maiduguri)">
+        <textarea id="review-text" placeholder="Tell us about your experience..."></textarea>
+      </div>
+      <button class="feedback-submit-btn" onclick="submitReview()">⭐ Submit Review</button>
+      <div class="feedback-success" id="feedback-success">🎉 Thank you! Your review has been posted.</div>
+      <div class="customer-reviews-list" id="customer-reviews-list"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" id="footer-logo-tap">
+          <div class="logo-icon">⚡</div>
+          <div class="logo-text">Nexo<span>tronix</span></div>
+        </div>
+        <p>Nexotronix — your trusted premium tech destination in Maiduguri, Nigeria. Genuine devices, real support, unbeatable prices.</p>
+        <div class="footer-socials">
+          <a class="social-btn" href="https://wa.me/2349036006553" target="_blank">📱</a>
+          <a class="social-btn" href="#" target="_blank">📘</a>
+          <a class="social-btn" href="#" target="_blank">📸</a>
+          <a class="social-btn" href="#" target="_blank">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#" onclick="setFilter('phone',null)">📱 Smartphones</a></li>
+          <li><a href="#" onclick="setFilter('laptop',null)">💻 Laptops</a></li>
+          <li><a href="#" onclick="setFilter('gaming',null)">🎮 Gaming</a></li>
+          <li><a href="#" onclick="setFilter('accessory',null)">🎧 Accessories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#products">All Products</a></li>
+          <li><a href="#featured">Featured</a></li>
+          <li><a href="#trust">About Us</a></li>
+          <li><a href="https://wa.me/2349036006553" target="_blank">Order Now</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <div class="footer-contact">
+          <div class="contact-item"><span class="contact-icon">📍</span> Maiduguri, Borno State, Nigeria</div>
+          <div class="contact-item"><span class="contact-icon">📞</span> +234 903 600 6553</div>
+          <div class="contact-item"><span class="contact-icon">📞</span> +234 812 327 0542</div>
+          <div class="contact-item"><span class="contact-icon">🕐</span> Mon–Sat: 8am – 8pm</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Nexotronix. All rights reserved.</p>
+      <p>Built with ❤️ for Maiduguri, Nigeria</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== AI ASSISTANT ===== -->
+<div id="ai-fab">
+  <div id="ai-panel">
+    <div class="ai-panel-header">
+      <div class="ai-header-left">
+        <div class="ai-avatar">🤖</div>
+        <div class="ai-header-info">
+          <h4>Nexo AI Assistant</h4>
+          <p>● Online — Ready to help</p>
+        </div>
+      </div>
+      <button class="ai-close" onclick="toggleAI()">✕</button>
+    </div>
+    <div class="ai-messages" id="ai-messages">
+      <div class="ai-msg ai">
+        <div class="ai-msg-bubble">👋 Welcome to Nexotronix! I'm your AI assistant. Ask me anything — "best phone under ₦200k", "gaming laptop for design", or "compare iPhone vs Samsung"!</div>
+      </div>
+    </div>
+    <div class="ai-suggestions" id="ai-suggestions">
+      <button class="ai-sugg" onclick="sendAISugg(this)">Best phone under ₦200k</button>
+      <button class="ai-sugg" onclick="sendAISugg(this)">Gaming laptop for design</button>
+      <button class="ai-sugg" onclick="sendAISugg(this)">UK used iPhone options</button>
+    </div>
+    <div class="ai-input-row">
+      <input class="ai-input" id="ai-input" type="text" placeholder="Ask about any product..." onkeydown="if(event.key==='Enter') sendAIMsg()">
+      <button class="ai-send" onclick="sendAIMsg()">➤</button>
+    </div>
+  </div>
+  <button class="ai-btn" onclick="toggleAI()">
+    <span>🤖</span>
+    <span>Ask Nexo AI</span>
+    <span class="ai-dot"></span>
+  </button>
+</div>
+
+
+<!-- ===== PRODUCT DETAIL MODAL ===== -->
+<div id="product-modal">
+  <div class="pmodal-box">
+    <div class="pmodal-header">
+      <h3 id="pmodal-title">Product Details</h3>
+      <button class="modal-close-btn" onclick="closeProductModal()">✕</button>
+    </div>
+    <div class="pmodal-gallery" id="pmodal-gallery"></div>
+    <div class="pmodal-body">
+      <div class="pmodal-badges" id="pmodal-badges"></div>
+      <div class="pmodal-name" id="pmodal-name"></div>
+      <div class="pmodal-cat" id="pmodal-cat"></div>
+      <div class="pmodal-price" id="pmodal-price"></div>
+      <div class="pmodal-stock-row" id="pmodal-stock-row"></div>
+      <hr class="pmodal-divider">
+      <div class="pmodal-specs-title">Key Specifications</div>
+      <div class="pmodal-specs" id="pmodal-specs"></div>
+    </div>
+    <div class="pmodal-actions" id="pmodal-actions"></div>
+  </div>
+</div>
+
+<!-- ===== STICKY CART BAR ===== -->
+<div id="cart-bar">
+  <div class="cart-bar-inner">
+    <div class="cart-count-label">🛒 <span id="cart-item-count">0</span> item(s) — <span id="cart-total-label" style="color:var(--gold);font-weight:800;">₦0</span></div>
+    <div class="cart-bar-actions">
+      <button class="btn-clear-cart" onclick="clearCart()">Clear</button>
+      <button class="btn-view-cart" onclick="openCart()">View Cart →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CART MODAL ===== -->
+<div id="cart-modal">
+  <div class="cart-modal-box">
+    <div class="cart-modal-header">
+      <div class="cart-modal-title">🛒 Your Cart</div>
+      <button class="modal-close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items-list"></div>
+    <div class="cart-total" id="cart-total-section"></div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast"></div>
+
+<!-- ===== ADMIN AUTH MODAL ===== -->
+<div id="admin-auth-modal">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-icon">🔐</div>
+      <div class="auth-title">Admin Access</div>
+      <div class="auth-sub">Secure login required</div>
+    </div>
+
+    <!-- Step 1: Password -->
+    <div class="auth-step active" id="auth-step-1">
+      <div>
+        <div class="auth-label">Admin Password</div>
+        <input class="auth-input" id="auth-password" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter') checkPassword()">
+      </div>
+      <div class="auth-error" id="auth-pw-error">Incorrect password. Try again.</div>
+      <button class="auth-btn" onclick="checkPassword()">Continue →</button>
+      <button class="auth-cancel" onclick="closeAdminAuth()">Cancel</button>
+    </div>
+
+    <!-- Step 2: OTP Colour Puzzle -->
+    <div class="auth-step" id="auth-step-2">
+      <input class="auth-input" id="auth-otp" type="text" maxlength="6" placeholder="Enter code" onkeydown="if(event.key==='Enter') checkOTP()">
+      <div class="auth-error" id="auth-otp-error">Incorrect code. Try again.</div>
+      <button class="auth-btn" onclick="checkOTP()">🔓 Open Admin Panel</button>
+      <button class="auth-cancel" onclick="closeAdminAuth()">Cancel</button>
+      <div style="margin-top:18px;text-align:center;">
+        <span style="font-size:9px;color:var(--text-dim);letter-spacing:0.3px;">e.g.&nbsp;</span>
+        <span id="otp-colour-tiles" style="display:inline-flex;gap:3px;vertical-align:middle;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="admin-panel">
+  <div class="admin-wrap">
+
+    <!-- Admin Header -->
+    <div class="admin-header">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div class="admin-logo-ring" id="admin-logo-tap" style="cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;"><img class="admin-logo-img site-logo" src="logo-dark.png" alt="Nexotronix" style="-webkit-tap-highlight-color:transparent;"></div>
+        <div>
+          <div style="font-size:15px;font-weight:800;font-family:var(--font-display);">Nexotronix Admin</div>
+          <div style="font-size:10px;color:var(--text-muted);display:flex;align-items:center;gap:5px;"><span class="admin-status-dot"></span><span id="admin-session-status">Session active</span></div>
+        </div>
+      </div>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+
+    <!-- Admin Tabs -->
+    <div class="admin-tabs" id="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('products')"><span class="admin-tab-ic">📦</span><span class="admin-tab-lb">Products</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('add')"><span class="admin-tab-ic">➕</span><span class="admin-tab-lb">Add</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('services')"><span class="admin-tab-ic">🔧</span><span class="admin-tab-lb">Services</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('categories')"><span class="admin-tab-ic">📁</span><span class="admin-tab-lb">Categories</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('analytics')"><span class="admin-tab-ic">📊</span><span class="admin-tab-lb">Analytics</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('activity')"><span class="admin-tab-ic">📋</span><span class="admin-tab-lb">Logs</span></button>
+      <button class="admin-tab" onclick="switchAdminTab('settings')"><span class="admin-tab-ic">⚙️</span><span class="admin-tab-lb">Settings</span></button>
+    </div>
+    
+    <!-- TAB: Products List -->
+    <div class="admin-tab-content" id="tab-products">
+      <div class="admin-form" style="padding-bottom:8px;">
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+          <input class="form-input" id="admin-search-input" placeholder="🔍 Search products..." oninput="filterAdminList()" style="flex:1;min-width:140px;font-size:12px;">
+          <button class="btn-gh-sync" onclick="exportProducts()" style="white-space:nowrap;">📥 Export</button>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="pill" style="font-size:10px;padding:4px 10px;" onclick="bulkAction('instock')">✅ All In Stock</button>
+          <button class="pill" style="font-size:10px;padding:4px 10px;" onclick="bulkAction('hidden')">👁 Hide All</button>
+          <button class="pill" style="font-size:10px;padding:4px 10px;color:var(--red);" onclick="bulkAction('delete')">🗑 Delete All</button>
+        </div>
+      </div>
+      <div id="admin-products-list" class="admin-products-list"></div>
+    </div>
+
+    <!-- TAB: Add Product -->
+    <div class="admin-tab-content" id="tab-add" style="display:none;">
+      <div class="admin-form">
+        <!-- Cloud DB status -->
+        <div style="margin-bottom:20px;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;">
+          <div style="font-size:12px;font-weight:800;font-family:var(--font-display);margin-bottom:10px;">☁️ Cloud Database</div>
+          <div class="gh-status-bar">
+            <div class="gh-dot" id="gh-dot"></div>
+            <span id="gh-status-text">🔄 Connecting...</span>
+            <button class="btn-gh-sync" onclick="syncFromGitHub()" style="margin-left:auto;">↻ Sync</button>
+          </div>
+        </div>
+        <div class="form-row"><label class="form-label">Product Name</label>
+          <input class="form-input" id="p-name" placeholder="e.g. iPhone 15 Pro Max 256GB"></div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Category</label>
+            <select class="form-select" id="p-cat">
+              <option value="phone">📱 Smartphone</option>
+              <option value="laptop">💻 Laptop</option>
+              <option value="gaming">🎮 Gaming</option>
+              <option value="tablet">📟 Tablet</option>
+              <option value="watch">⌚ Smartwatch</option>
+              <option value="audio">🎧 Audio/Earbuds</option>
+              <option value="accessory">🔌 Accessory</option>
+              <option value="pc">🖥️ PC & Components</option>
+              <option value="camera">📷 Camera</option>
+              <option value="tv">📺 TV & Display</option>
+              <option value="smart-home">🏠 Smart Home</option>
+              <option value="network">📶 Networking</option>
+              <option value="power">🔋 Power & Charging</option>
+              <option value="software">💿 Software</option>
+              <option value="digital">📦 Digital Product</option>
+            </select></div>
+          <div class="form-row"><label class="form-label">Condition</label>
+            <select class="form-select" id="p-cond">
+              <option value="new">🟢 Brand New</option>
+              <option value="uk-used">🟡 UK Used</option>
+              <option value="ng-used">🟠 NG Used</option>
+              <option value="refurb">🔵 Refurbished</option>
+              <option value="open-box">⚪ Open Box</option>
+              <option value="like-new">✨ Like New</option>
+              <option value="ex-display">🏷️ Ex-Display</option>
+            </select></div>
+        </div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Price (₦)</label>
+            <input class="form-input" id="p-price" type="number" placeholder="350000"></div>
+          <div class="form-row"><label class="form-label">Quantity</label>
+            <input class="form-input" id="p-qty" type="number" placeholder="5" min="0" value="1"></div>
+        </div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Stock Status</label>
+            <select class="form-select" id="p-stock">
+              <option value="instock">✅ In Stock</option>
+              <option value="limited">⚡ Limited</option>
+              <option value="coming-soon">🔔 Coming Soon</option>
+              <option value="sold">❌ Sold Out</option>
+              <option value="hidden">👁️ Hidden</option>
+            </select></div>
+          <div class="form-row"><label class="form-label">Featured?</label>
+            <select class="form-select" id="p-featured">
+              <option value="no">No</option>
+              <option value="yes">⭐ Yes — Featured</option>
+            </select></div>
+        </div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Emoji Icon</label>
+            <input class="form-input" id="p-emoji" placeholder="📱"></div>
+          <div class="form-row"><label class="form-label">Warranty</label>
+            <input class="form-input" id="p-warranty" placeholder="e.g. 1 Year Apple"></div>
+        </div>
+        <div class="form-row"><label class="form-label">Specifications</label>
+          <textarea class="form-textarea" id="p-specs" placeholder="e.g. 6.7&quot; OLED, A17 Pro, 256GB, USB-C"></textarea>
+          <button class="ai-gen-btn" onclick="aiGenerateSpecs()">✨ Auto-Generate with AI</button></div>
+        <div class="form-row"><label class="form-label">Product Images (up to 5 URLs)</label>
+          <div class="img-url-list" id="img-url-list">
+            <div class="img-url-row">
+              <input class="form-input" type="url" placeholder="https://example.com/image1.jpg">
+              <button class="btn-remove-img" onclick="removeImgRow(this)">✕</button>
+            </div>
+          </div>
+          <button class="btn-add-img" onclick="addImgRow()">+ Add Image URL</button></div>
+        <div class="form-row"><label class="form-label">Tags (comma separated)</label>
+          <input class="form-input" id="p-tags" placeholder="e.g. bestseller, 5G, gaming"></div>
+        <button class="btn-admin-save" onclick="adminAddProduct()">✅ Save Product</button>
+      </div>
+    </div>
+
+    <!-- TAB: Services -->
+    <div class="admin-tab-content" id="tab-services" style="display:none;">
+      <div class="admin-form">
+        <div style="font-size:13px;font-weight:800;font-family:var(--font-display);margin-bottom:16px;">➕ Add Service</div>
+        <div class="form-row"><label class="form-label">Service Name</label>
+          <input class="form-input" id="svc-name" placeholder="e.g. CCTV Installation"></div>
+        <div class="form-row"><label class="form-label">Description</label>
+          <textarea class="form-textarea" id="svc-desc" placeholder="What does this service include?"></textarea></div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Price / Rate</label>
+            <input class="form-input" id="svc-price" placeholder="From ₦5,000"></div>
+          <div class="form-row"><label class="form-label">Duration</label>
+            <input class="form-input" id="svc-duration" placeholder="2–4 hours"></div>
+        </div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Icon (emoji)</label>
+            <input class="form-input" id="svc-icon" placeholder="📷" maxlength="4"></div>
+          <div class="form-row"><label class="form-label">Status</label>
+            <select class="form-select" id="svc-status">
+              <option value="active">✅ Available</option>
+              <option value="busy">⏳ Currently Busy</option>
+              <option value="hidden">👁️ Hidden</option>
+            </select></div>
+        </div>
+        <div class="form-row"><label class="form-label">WhatsApp Booking Message</label>
+          <input class="form-input" id="svc-wa" placeholder="Hi Nexotronix, I need CCTV Installation"></div>
+        <button class="btn-admin-save" onclick="adminAddService()">✅ Save Service</button>
+      </div>
+      <div id="services-admin-list" style="padding:0 16px 24px;"></div>
+    </div>
+
+    <!-- TAB: Categories -->
+    <div class="admin-tab-content" id="tab-categories" style="display:none;">
+      <div class="admin-form">
+        <div style="font-size:13px;font-weight:800;font-family:var(--font-display);margin-bottom:16px;">➕ Add Category</div>
+        <div class="form-row"><label class="form-label">Category Name</label>
+          <input class="form-input" id="cat-name" placeholder="e.g. Cameras"></div>
+        <div class="form-grid2">
+          <div class="form-row"><label class="form-label">Icon (emoji)</label>
+            <input class="form-input" id="cat-icon" placeholder="📷" maxlength="4"></div>
+          <div class="form-row"><label class="form-label">Slug (ID)</label>
+            <input class="form-input" id="cat-slug" placeholder="camera"></div>
+        </div>
+        <button class="btn-admin-save" onclick="adminAddCategory()">✅ Save Category</button>
+      </div>
+      <div id="categories-admin-list"></div>
+    </div>
+
+    <!-- TAB: Analytics -->
+    <div class="admin-tab-content" id="tab-analytics" style="display:none;">
+      <div class="admin-form" id="analytics-content">
+        <div style="text-align:center;padding:24px;color:var(--text-muted);">Loading analytics...</div>
+      </div>
+    </div>
+
+    <!-- TAB: Activity Log -->
+    <div class="admin-tab-content" id="tab-activity" style="display:none;">
+      <div class="admin-form" id="activity-content">
+        <div style="text-align:center;padding:24px;color:var(--text-muted);">Loading logs...</div>
+      </div>
+    </div>
+
+    <!-- TAB: Settings -->
+    <div class="admin-tab-content" id="tab-settings" style="display:none;">
+      <div class="admin-form">
+        <div style="font-size:13px;font-weight:800;font-family:var(--font-display);margin-bottom:16px;">🏪 Store Settings</div>
+        <div class="form-row"><label class="form-label">Store Name</label>
+          <input class="form-input" id="set-name" placeholder="Nexotronix"></div>
+        <div class="form-row"><label class="form-label">WhatsApp Number</label>
+          <input class="form-input" id="set-wa" placeholder="2349036006553"></div>
+        <div class="form-row"><label class="form-label">Marquee Text (pipe-separated |)</label>
+          <input class="form-input" id="set-marquee" placeholder="✅ 100% GENUINE | 🚚 SAME-DAY DELIVERY"></div>
+        <button class="btn-admin-save" onclick="saveSettings()" style="margin-bottom:8px;">💾 Save Settings</button>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:800;font-family:var(--font-display);margin-bottom:12px;">⚡ Flash Sale</div>
+          <div class="form-row"><label class="form-label">Sale Label</label>
+            <input class="form-input" id="set-flash-label" placeholder="Weekend Special"></div>
+          <div class="form-grid2">
+            <div class="form-row"><label class="form-label">Discount %</label>
+              <input class="form-input" id="set-flash-disc" type="number" placeholder="20" min="1" max="90"></div>
+            <div class="form-row"><label class="form-label">Duration (mins)</label>
+              <input class="form-input" id="set-flash-dur" type="number" placeholder="120" min="10"></div>
+          </div>
+          <button class="btn-admin-save" onclick="startFlashSale()" style="background:rgba(229,62,62,0.12);border-color:rgba(229,62,62,0.3);color:#e53e3e;margin-bottom:8px;">⚡ Start Flash Sale</button>
+          <button class="btn-admin-save" onclick="endFlashSale()" style="background:transparent;color:var(--text-muted);">✕ End Flash Sale</button>
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:800;font-family:var(--font-display);margin-bottom:12px;">☁️ Cloud & Data</div>
+          <div class="gh-status-bar" style="margin-bottom:10px;">
+            <div class="gh-dot" id="gh-dot2"></div>
+            <span id="gh-status-text2">Checking...</span>
+            <button class="btn-gh-sync" onclick="syncFromGitHub()" style="margin-left:auto;">↻ Force Sync</button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-gh-sync" onclick="exportProducts()" style="flex:1;">📥 Export JSON</button>
+            <button class="btn-gh-sync" onclick="backupData()" style="flex:1;">💾 Local Backup</button>
+          </div>
+          <div style="margin-top:8px;font-size:10px;color:var(--text-dim);">Last sync: <span id="last-sync-time">—</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></div>
+
+<script src="index.js"></script>
+</body>
+</html>

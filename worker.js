@@ -9,11 +9,24 @@
  *   VAPID_SUBJECT      — mailto:youremail@gmail.com
  */
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
+const ALLOWED_ORIGINS = [
+  'https://samusts.github.io',
+  'https://nexotronix.vercel.app'
+];
+function corsFor(request) {
+  const origin = request.headers.get('Origin') || '';
+  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allow,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+}
+let CORS = ALLOWED_ORIGINS.reduce((h, o) => h, {
+  'Access-Control-Allow-Origin': ALLOWED_ORIGINS[0],
   'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+});
 
 const GITHUB_REPO = 'samusts/Nexotronix';
 
@@ -27,6 +40,21 @@ function checkRate(ip, key, max, ms = 60000) {
   entry.n++;
   rateLimits.set(k, entry);
   return entry.n <= max;
+}
+
+// Verify a session token issued by /auth/login
+async function verifyToken(request, env, requiredSite) {
+  const auth = request.headers.get('Authorization') || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  if (!token || !env.NEXOTRONIX_KV) return false;
+  const raw = await env.NEXOTRONIX_KV.get('session_' + token);
+  if (!raw) return false;
+  try {
+    const session = JSON.parse(raw);
+    if (session.expiresAt < Date.now()) return false;
+    if (requiredSite && session.site !== requiredSite) return false;
+    return true;
+  } catch { return false; }
 }
 
 // Helpers
@@ -65,6 +93,8 @@ async function ghWrite(file, content, sha, message, token) {
 
 export default {
   async fetch(request, env) {
+    CORS = corsFor(request);
+
     // CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS });
@@ -74,16 +104,65 @@ export default {
     const path = url.pathname;
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
 
+    // ── REAL SERVER-SIDE LOGIN (replaces client-side password checks) ──
+    if (path === '/auth/login' && request.method === 'POST') {
+      if (!checkRate(ip, 'login:' + ip, 8, 15 * 60000)) {
+        return errRes('Too many attempts. Wait 15 minutes.', 429);
+      }
+      if (!env.NEXOTRONIX_KV) return errRes('KV not bound — cannot authenticate', 500);
+      let body;
+      try { body = await request.json(); } catch { return errRes('Invalid JSON'); }
+      const { site, username, password } = body;
+      const kvKey = 'auth_' + (site === 'erp' ? 'erp' : 'admin');
+
+      // Credentials live in KV (so they can be changed later via /auth/change-password).
+      // First run: seed from the Worker secret, then never touch the secret again.
+      let stored = await env.NEXOTRONIX_KV.get(kvKey);
+      let creds;
+      if (stored) {
+        creds = JSON.parse(stored);
+      } else {
+        const seedPass = site === 'erp' ? env.ERP_PASSWORD : env.ADMIN_PASSWORD;
+        if (!seedPass) return errRes('Server not configured for login', 500);
+        creds = { user: site === 'erp' ? (env.ERP_USERNAME || 'admin') : 'admin', pass: seedPass };
+        await env.NEXOTRONIX_KV.put(kvKey, JSON.stringify(creds));
+      }
+
+      if (username !== creds.user || password !== creds.pass) {
+        return errRes('Incorrect username or password', 401);
+      }
+
+      const token = crypto.randomUUID() + crypto.randomUUID();
+      const ttlMs = 12 * 60 * 60 * 1000; // 12 hour session
+      await env.NEXOTRONIX_KV.put('session_' + token, JSON.stringify({ site, expiresAt: Date.now() + ttlMs }), { expirationTtl: 12 * 60 * 60 });
+      return jsonRes({ token, expiresIn: ttlMs });
+    }
+
+    // ── Change password (requires a valid session for that site) ──
+    if (path === '/auth/change-password' && request.method === 'POST') {
+      let body;
+      try { body = await request.json(); } catch { return errRes('Invalid JSON'); }
+      const { site, newUsername, newPassword } = body;
+      if (!(await verifyToken(request, env, site === 'erp' ? 'erp' : 'admin'))) {
+        return errRes('Unauthorized', 401);
+      }
+      if (!newPassword && !newUsername) return errRes('Nothing to update');
+      const kvKey = 'auth_' + (site === 'erp' ? 'erp' : 'admin');
+      const stored = await env.NEXOTRONIX_KV.get(kvKey);
+      const creds = stored ? JSON.parse(stored) : { user: 'admin', pass: '' };
+      if (newUsername) creds.user = newUsername;
+      if (newPassword) creds.pass = newPassword;
+      await env.NEXOTRONIX_KV.put(kvKey, JSON.stringify(creds));
+      return jsonRes({ ok: true });
+    }
+
     // ── ERP KV STORE (Cloudflare KV — shared online ERP data) ──
     if (path.startsWith('/kv/')) {
       const key = path.slice(4);
-      const ALLOWED_KEYS = ['invoices','quotations','receipts','estimates','customers','projects','expenses','audit','settings','creds'];
+      const ALLOWED_KEYS = ['invoices','quotations','receipts','estimates','customers','projects','expenses','audit','settings'];
       if (!ALLOWED_KEYS.includes(key)) return errRes('Unknown key', 404);
 
-      const authHeader = request.headers.get('X-Nexotronix-Auth') || '';
-      if (!env.ERP_KV_SECRET || authHeader !== env.ERP_KV_SECRET) {
-        return errRes('Unauthorized', 401);
-      }
+      if (!(await verifyToken(request, env, 'erp'))) return errRes('Unauthorized', 401);
       if (!env.NEXOTRONIX_KV) return errRes('KV not bound on this Worker', 500);
 
       if (request.method === 'GET') {
@@ -94,7 +173,9 @@ export default {
         if (!checkRate(ip, 'kvwrite', 60)) return errRes('Rate limit exceeded', 429);
         let body;
         try { body = await request.json(); } catch { return errRes('Invalid JSON'); }
-        await env.NEXOTRONIX_KV.put('erp_' + key, JSON.stringify(body.value));
+        const serialized = JSON.stringify(body.value);
+        if (serialized.length > 2 * 1024 * 1024) return errRes('Value too large (max 2MB)', 413);
+        await env.NEXOTRONIX_KV.put('erp_' + key, serialized);
         return jsonRes({ ok: true, key });
       }
       return errRes('Method not allowed', 405);
@@ -160,6 +241,7 @@ export default {
 
     // ── Database Write ────────────────────────────────────────
     if (path === '/db' && request.method === 'PUT') {
+      if (!(await verifyToken(request, env, 'admin'))) return errRes('Unauthorized', 401);
       if (!checkRate(ip, 'db-write', 30)) return errRes('Too many writes. Wait.', 429);
 
       let body;
@@ -260,6 +342,7 @@ export default {
 
     // ── Push Send (admin) ─────────────────────────────────────
     if (path === '/push/send' && request.method === 'POST') {
+      if (!(await verifyToken(request, env, 'admin'))) return errRes('Unauthorized', 401);
       if (!checkRate(ip, 'push-send', 10)) return errRes('Rate limit', 429);
       if (!env.VAPID_PRIVATE_KEY) return errRes('VAPID not configured', 503);
 

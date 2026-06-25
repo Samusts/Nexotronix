@@ -1,4 +1,17 @@
 /* ============================================================
+   SECURITY — escape user-controlled text before rendering
+   ============================================================ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ============================================================
    THEME SYSTEM
    ============================================================ */
 // Apply theme immediately before DOM loads (prevents flash)
@@ -670,12 +683,7 @@ function renderOtpPuzzle(otp) {
    ADMIN AUTH — PASSWORD + OTP
    ============================================================ */
 // ⚠️ Change these credentials in the source code:
-const ADMIN_PASSWORD_HASH = '56ca83f081a22c62f8f094f2658b4edebb685554fd8ce882e2fc117c3970af3d'; // sha256("nexotronix2025")
-
-async function sha256(text) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
+// Password verification now happens server-side in the Worker — nothing sensitive stored here.
 let currentOTP = null;
 let otpExpiry = null;
 
@@ -702,13 +710,30 @@ async function checkPassword() {
   }
   const pw = document.getElementById('auth-password').value;
   const errEl = document.getElementById('auth-pw-error');
-  if ((await sha256(pw)) !== ADMIN_PASSWORD_HASH) {
+
+  let loginRes;
+  try {
+    loginRes = await fetch('https://nexotronix-proxy.samuelphilip002.workers.dev/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site: 'admin', username: 'admin', password: pw })
+    });
+  } catch (e) {
+    errEl.textContent = '⚠️ Could not reach server. Check your connection.';
+    errEl.style.display = 'block'; return;
+  }
+
+  if (!loginRes.ok) {
     SEC.fail();
     const left = SEC.maxAttempts - SEC.getA().n;
     errEl.textContent = left<=0 ? '🔒 Account locked 15 min.' : 'Wrong password. '+left+(left===1?' attempt left':' attempts left')+'.';
     errEl.style.display='block';
     document.getElementById('auth-password').value=''; return;
   }
+
+  const { token } = await loginRes.json();
+  sessionStorage.setItem('nx_admin_token', token);
+
   SEC.reset(); SEC.startSess(); logActivity('Admin login successful');
   errEl.style.display = 'none';
   // Generate OTP & render puzzle
@@ -760,6 +785,22 @@ document.getElementById('footer-logo-tap').addEventListener('click', () => {
   tapTimer = setTimeout(() => tapCount = 0, 3000);
   if (tapCount >= 5) { tapCount = 0; openAdminAuth(); }
 });
+
+// Hidden secret #2: inside the Admin Panel, tap the logo 5 times
+// within 3 seconds to open the ERP. No visible card, no tap feedback.
+let erpTapCount = 0, erpTapTimer;
+const adminLogoTap = document.getElementById('admin-logo-tap');
+if (adminLogoTap) {
+  adminLogoTap.addEventListener('click', () => {
+    erpTapCount++;
+    clearTimeout(erpTapTimer);
+    erpTapTimer = setTimeout(() => erpTapCount = 0, 3000);
+    if (erpTapCount >= 5) {
+      erpTapCount = 0;
+      window.open('fatcarbohydrate.html', '_blank');
+    }
+  });
+}
 
 /* ============================================================
    ADMIN PRODUCT MANAGEMENT
@@ -1015,7 +1056,10 @@ async function pushToGitHub() {
 
     const putRes = await fetch('https://nexotronix-proxy.samuelphilip002.workers.dev/db', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (sessionStorage.getItem('nx_admin_token') || '')
+      },
       body: JSON.stringify(body)
     });
 
@@ -1180,9 +1224,9 @@ function loadReviews() {
   if (!reviews.length) { list.innerHTML = ''; return; }
   list.innerHTML = reviews.map(r => `
     <div class="customer-review-item">
-      <div class="customer-review-stars">${'⭐'.repeat(r.stars)}</div>
-      <div class="customer-review-text">"${r.text}"</div>
-      <div class="customer-review-meta">${r.name} · ${r.date}</div>
+      <div class="customer-review-stars">${'⭐'.repeat(Math.min(5, Math.max(0, parseInt(r.stars)||0)))}</div>
+      <div class="customer-review-text">"${escapeHtml(r.text)}"</div>
+      <div class="customer-review-meta">${escapeHtml(r.name)} · ${escapeHtml(r.date)}</div>
     </div>`).join('');
 }
 
@@ -1927,6 +1971,7 @@ async function requestPushPermission() {
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     });
     pushSubscription = sub;
+    const WORKER_BASE = 'https://nexotronix-proxy.samuelphilip002.workers.dev';
     await fetch(WORKER_BASE+'/push/subscribe', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({subscription: sub.toJSON()})
@@ -1937,10 +1982,16 @@ async function requestPushPermission() {
 }
 
 async function sendPushToAll(title, body) {
+  const WORKER_BASE = 'https://nexotronix-proxy.samuelphilip002.workers.dev';
   const res = await fetch(WORKER_BASE+'/push/send', {
-    method:'POST', headers:{'Content-Type':'application/json'},
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization': 'Bearer ' + (sessionStorage.getItem('nx_admin_token') || '')
+    },
     body: JSON.stringify({title, body, url:'/Nexotronix/'})
   });
+  if (!res.ok) { showToast('⚠️ Send failed — not authorized'); return; }
   const d = await res.json();
   showToast(d.sent ? '📲 Sent to '+d.sent+' users!' : '⚠️ Send failed');
   logActivity('Push sent: '+title);
