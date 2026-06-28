@@ -562,7 +562,11 @@ async function checkLogin() {
   }
 
   if (!loginRes.ok) {
-    errEl.textContent = '❌ Incorrect username or password';
+    if (loginRes.status >= 500) {
+      errEl.textContent = '⚠️ Server not set up yet (status '+loginRes.status+'). Check Worker secrets/KV binding.';
+    } else {
+      errEl.textContent = '❌ Incorrect username or password';
+    }
     return;
   }
 

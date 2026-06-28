@@ -185,12 +185,13 @@ export default {
     if (path === '/health') {
       return jsonRes({
         status: 'ok',
-        worker: 'Nexotronix v4.3',
+        worker: 'Nexotronix v4.4',
         ai: !!env.ANTHROPIC_KEY,
         db: !!env.GITHUB_TOKEN,
         push: !!env.VAPID_PRIVATE_KEY,
-        erpKv: !!env.NEXOTRONIX_KV,
-        erpKvSecret: !!env.ERP_KV_SECRET,
+        kvBound: !!env.NEXOTRONIX_KV,
+        adminPasswordSet: !!env.ADMIN_PASSWORD,
+        erpPasswordSet: !!env.ERP_PASSWORD,
         time: new Date().toISOString()
       });
     }

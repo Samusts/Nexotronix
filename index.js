@@ -724,6 +724,10 @@ async function checkPassword() {
   }
 
   if (!loginRes.ok) {
+    if (loginRes.status >= 500) {
+      errEl.textContent = '⚠️ Server not set up yet (status '+loginRes.status+'). Check Worker secrets/KV binding.';
+      errEl.style.display = 'block'; return;
+    }
     SEC.fail();
     const left = SEC.maxAttempts - SEC.getA().n;
     errEl.textContent = left<=0 ? '🔒 Account locked 15 min.' : 'Wrong password. '+left+(left===1?' attempt left':' attempts left')+'.';
