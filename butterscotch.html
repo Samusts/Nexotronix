@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Nexotronix</title>
+  <link rel="icon" href="logo-dark.png">
+  <link rel="stylesheet" href="butterscotch.css">
+</head>
+<body>
+
+<!-- ===== LOGIN GATE ===== -->
+<div id="login-gate" class="login-gate">
+  <div class="login-card">
+    <img src="logo-dark.png" class="login-logo" alt="Nexotronix" id="login-logo">
+    <h1 class="login-title">Nexotronix</h1>
+    <p class="login-sub">Secure portal access</p>
+
+    <!-- Step 1: Credentials -->
+    <div id="step-credentials" class="login-step active">
+      <div class="login-methods">
+        <button class="social-btn google-btn" onclick="oauthLogin('google')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="social-btn facebook-btn" onclick="oauthLogin('facebook')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Continue with Facebook
+        </button>
+      </div>
+
+      <div class="login-divider"><span>or</span></div>
+
+      <div class="login-field">
+        <label>Username or Email</label>
+        <input type="text" id="inp-username" placeholder="Enter your username or email"
+          autocomplete="username" onkeydown="if(event.key==='Enter')focusPass()">
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="inp-password" placeholder="Enter your password"
+            autocomplete="current-password" onkeydown="if(event.key==='Enter')submitCredentials()">
+          <button class="show-pass" onclick="togglePass()" tabindex="-1">👁</button>
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label>Account type</label>
+        <select id="inp-type" class="login-select">
+          <option value="subadmin">Sub-Admin</option>
+          <option value="partner">Partner / Seller</option>
+        </select>
+      </div>
+
+      <div id="cred-error" class="login-error"></div>
+      <button class="login-btn" onclick="submitCredentials()">
+        <span id="cred-btn-text">Continue →</span>
+      </button>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div id="step-otp" class="login-step">
+      <div class="otp-sent-msg">
+        <div style="font-size:32px;margin-bottom:8px">📱</div>
+        <div id="otp-sent-text">Code sent to your phone</div>
+        <div id="otp-countdown-display" class="otp-countdown">2:00</div>
+      </div>
+      <div class="login-field">
+        <label>Enter 6-digit code</label>
+        <input type="text" id="inp-otp" placeholder="000000" maxlength="6"
+          inputmode="numeric" class="otp-input"
+          onkeydown="if(event.key==='Enter')submitOTP()">
+      </div>
+      <div id="otp-error" class="login-error"></div>
+      <button class="login-btn" onclick="submitOTP()">
+        <span id="otp-btn-text">Verify & Enter →</span>
+      </button>
+      <button class="login-back" onclick="backToCredentials()">← Back</button>
+      <button class="login-resend" id="resend-btn" onclick="resendOTP()" disabled>
+        Resend code (wait <span id="resend-countdown">120</span>s)
+      </button>
+    </div>
+
+    <p class="login-footer">Authorized personnel only</p>
+  </div>
+</div>
+
+<!-- ===== SUBADMIN DASHBOARD ===== -->
+<div id="subadmin-dashboard" class="dashboard hidden">
+  <nav class="dash-nav">
+    <div class="dash-nav-logo">
+      <img src="logo-dark.png" alt="Nexotronix" id="sa-logo" style="-webkit-tap-highlight-color:transparent">
+      <span>Sub-Admin</span>
+    </div>
+    <div class="dash-nav-actions">
+      <button class="nav-btn" onclick="toggleTheme()">☀️</button>
+      <button class="nav-btn" onclick="logout()">🔒 Logout</button>
+    </div>
+  </nav>
+  <div class="dash-body">
+    <aside class="dash-sidebar" id="sa-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Management</div>
+        <button class="sidebar-item active" onclick="saGoTo('approvals')" id="sa-tab-approvals" data-perm="approve_products">
+          ✅ Approvals <span class="badge" id="sa-approvals-badge"></span>
+        </button>
+        <button class="sidebar-item" onclick="saGoTo('orders')" id="sa-tab-orders" data-perm="view_all_orders">
+          📦 Orders
+        </button>
+        <button class="sidebar-item" onclick="saGoTo('customers')" id="sa-tab-customers" data-perm="manage_customers">
+          👥 Customers
+        </button>
+        <button class="sidebar-item" onclick="saGoTo('partners')" id="sa-tab-partners" data-perm="view_partner_list">
+          🤝 Partners
+        </button>
+        <button class="sidebar-item" onclick="saGoTo('analytics')" id="sa-tab-analytics" data-perm="view_analytics">
+          📊 Analytics
+        </button>
+        <button class="sidebar-item" onclick="saGoTo('notifications')" id="sa-tab-notifications" data-perm="send_push_notifications">
+          📣 Notifications
+        </button>
+      </div>
+    </aside>
+    <main class="dash-main" id="sa-main">
+      <div id="sa-panel-approvals" class="dash-panel active">
+        <div class="panel-header">
+          <h2>Pending Approvals</h2>
+          <button class="refresh-btn" onclick="loadApprovals()">↻ Refresh</button>
+        </div>
+        <div id="approvals-list" class="items-grid">
+          <div class="loading-skeleton"></div>
+        </div>
+      </div>
+      <div id="sa-panel-orders" class="dash-panel">
+        <div class="panel-header"><h2>All Orders</h2></div>
+        <div id="orders-list"></div>
+      </div>
+      <div id="sa-panel-customers" class="dash-panel">
+        <div class="panel-header"><h2>Customers</h2></div>
+        <div id="customers-list"></div>
+      </div>
+      <div id="sa-panel-partners" class="dash-panel">
+        <div class="panel-header"><h2>Partners</h2></div>
+        <div id="partners-list"></div>
+      </div>
+      <div id="sa-panel-analytics" class="dash-panel">
+        <div class="panel-header"><h2>Analytics</h2></div>
+        <div id="analytics-content"></div>
+      </div>
+      <div id="sa-panel-notifications" class="dash-panel">
+        <div class="panel-header"><h2>Send Notifications</h2></div>
+        <div id="notifications-content"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ===== PARTNER REDIRECT (they go to pancake.html) ===== -->
+<div id="partner-redirect" class="dashboard hidden">
+  <div class="redirect-msg">
+    <div style="font-size:48px">🥞</div>
+    <p>Redirecting to your dashboard...</p>
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<script src="butterscotch.js"></script>
+</body>
+</html>

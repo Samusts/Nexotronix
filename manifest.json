@@ -1,0 +1,41 @@
+{
+  "name": "Nexotronix \u2014 Smart Tech, Reliable Service",
+  "short_name": "Nexotronix",
+  "description": "Smart Tech, Reliable Service. Premium phones, laptops, gaming & installation services in Maiduguri, Nigeria.",
+  "start_url": "/Nexotronix/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#C9A84C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "logo-dark.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "shopping",
+    "business"
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Browse Products",
+      "url": "/Nexotronix/#products",
+      "description": "View all products"
+    },
+    {
+      "name": "Our Services",
+      "url": "/Nexotronix/#services",
+      "description": "Installation services"
+    }
+  ]
+}
