@@ -40,7 +40,7 @@ async function checkExistingSession() {
 
   // Validate token is still live
   try {
-    const res = await authFetch('/api/auth/me');
+    const res = await authFetch('/api/auth?action=me');
     if (res.ok) {
       _session = { token, userType };
       enterDashboard(userType);
@@ -358,7 +358,7 @@ async function approveProduct(productId, action) {
     if (!reason) return;
   }
   try {
-    const res = await authFetch('/api/products/approve', {
+    const res = await authFetch('/api/products?action=approve', {
       method: 'POST',
       body: JSON.stringify({ productId, action, reason })
     });
@@ -430,7 +430,7 @@ async function loadAnalytics() {
 // ── LOGOUT ───────────────────────────────────────────────────
 async function logout() {
   try {
-    await authFetch('/api/auth/logout', { method: 'POST' });
+    await authFetch('/api/auth?action=logout', { method: 'POST' });
   } catch {}
   sessionStorage.removeItem('bsc_token');
   sessionStorage.removeItem('bsc_usertype');

@@ -502,7 +502,7 @@ function requireOTP(actionFn) {
 
 async function sendAdminOTP() {
   try {
-    const res = await fetch('/api/auth/request-admin-otp', {
+    const res = await fetch('/api/auth?action=request-admin-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (sessionStorage.getItem('nx_erp_token') || '') }
     });
@@ -553,7 +553,7 @@ async function submitOTP() {
   if (!otp || otp.length !== 6) { errEl.textContent = 'Enter the 6-digit code'; return; }
 
   try {
-    const res = await fetch('/api/auth/verify-admin-otp', {
+    const res = await fetch('/api/auth?action=verify-admin-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (sessionStorage.getItem('nx_erp_token') || '') },
       body: JSON.stringify({ otp })

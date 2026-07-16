@@ -713,7 +713,7 @@ async function checkPassword() {
 
   let loginRes;
   try {
-    loginRes = await fetch('https://nexotronix-proxy.samuelphilip002.workers.dev/auth/login', {
+    loginRes = await fetch('/api/auth?action=login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ site: 'admin', username: 'admin', password: pw })

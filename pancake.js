@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // Auto-logout when tab/app closes
 window.addEventListener('beforeunload', () => {
   if (_session?.token) {
-    fetch('/api/auth/logout', {
+    fetch('/api/auth?action=logout', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${_session.token}`, 'Content-Type': 'application/json' },
       keepalive: true
@@ -64,7 +64,7 @@ async function verifySession() {
   }
 
   try {
-    const res = await fetch('/api/auth/me', {
+    const res = await fetch('/api/auth?action=me', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -138,7 +138,7 @@ function closeSidebar() {
 async function loadDashboardStats() {
   try {
     const [statsRes, walletRes] = await Promise.all([
-      authFetch('/api/partners/stats'),
+      authFetch('/api/accounts?type=partners&stats=1'),
       authFetch('/api/wallets')
     ]);
 
@@ -338,7 +338,7 @@ async function submitProduct() {
   document.querySelector('#add-product-modal .primary-btn').disabled = true;
 
   try {
-    const res = await authFetch('/api/products', {
+    const res = await authFetch('/api/products?action=list', {
       method: 'POST',
       body: JSON.stringify({
         name, price: Number(price),
@@ -369,7 +369,7 @@ async function loadOrders() {
   const container = document.getElementById('orders-list');
   container.innerHTML = '<div class="skeleton"></div>';
   try {
-    const res = await authFetch('/api/orders?partner=me');
+    const res = await authFetch('/api/orders');
     const data = await res.json();
     const orders = data.orders || [];
     const badge = document.getElementById('new-orders-badge');
@@ -478,7 +478,7 @@ async function submitWithdrawal() {
   }
 
   try {
-    const res = await authFetch('/api/wallets', {
+    const res = await authFetch('/api/wallets?action=withdraw', {
       method: 'POST',
       body: JSON.stringify({ amount: Number(amount), bankName, accountNumber, accountName })
     });
@@ -516,7 +516,7 @@ async function loadChats() {
   const listEl = document.getElementById('chat-list');
   listEl.innerHTML = '<div class="skeleton" style="height:60px;margin:8px"></div>';
   try {
-    const res = await authFetch('/api/chat/rooms');
+    const res = await authFetch('/api/chat?action=rooms');
     const data = await res.json();
     const rooms = data.rooms || [];
     const badge = document.getElementById('unread-badge');
@@ -573,7 +573,7 @@ async function sendMessage() {
   if (!msg || !_currentChatRoom) return;
   inp.value = '';
   try {
-    await authFetch('/api/chat/send', {
+    await authFetch('/api/chat?action=send', {
       method: 'POST',
       body: JSON.stringify({ roomId: _currentChatRoom, message: msg })
     });
@@ -641,7 +641,7 @@ async function saveProfile() {
   const bio = document.getElementById('prof-bio').value.trim();
   const phone = document.getElementById('prof-phone').value.trim();
   try {
-    const res = await authFetch('/api/partners/profile', {
+    const res = await authFetch('/api/accounts?action=profile', {
       method: 'PUT', body: JSON.stringify({ businessName, bio, phone })
     });
     const data = await res.json();
@@ -665,7 +665,7 @@ async function suggestCategory() {
 
 // ── LOGOUT ───────────────────────────────────────────────────
 async function logout() {
-  try { await authFetch('/api/auth/logout', { method: 'POST' }); } catch {}
+  try { await authFetch('/api/auth?action=logout', { method: 'POST' }); } catch {}
   sessionStorage.removeItem('bsc_token');
   sessionStorage.removeItem('bsc_usertype');
   window.location.href = 'butterscotch.html';
